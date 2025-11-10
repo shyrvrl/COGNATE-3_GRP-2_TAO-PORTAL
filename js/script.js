@@ -1,6 +1,3 @@
-/* This is js/script.js */
-
-// This function loads reusable HTML components
 const loadComponent = (selector, path) => {
     fetch(path)
         .then(response => {
@@ -20,14 +17,42 @@ const loadComponent = (selector, path) => {
         .catch(error => console.error(error));
 };
 
-// --- Wait for the page to be fully loaded before running our script ---
 document.addEventListener("DOMContentLoaded", () => {
     
     // --- Load all our reusable components ---
-    // This looks for an element with id="header-placeholder" and injects header.html into it
     loadComponent("#header-placeholder", "components/header.html");
 
-    // This is a test to make sure our script.js is loaded
+    // test to make sure our script.js is loaded
     console.log("TAO Portal script.js is loaded!");
+
+
+    /* Show/Hide Password (Image Toggle Version) */
+    
+    // icon images
+    const eyeOpenIcon = "assets/eye-open.png";
+    const eyeSlashIcon = "assets/eye-slash.png";
+
+    const togglePassword = document.querySelector('#toggle-password');
+    const password = document.querySelector('#password');
+
+    // to check if the elements exist on the page
+    if (togglePassword && password) {
+        
+        togglePassword.addEventListener('click', function () {
+            
+            // Toggle the type of the password field
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            
+            // Toggle the icon image source
+            if (type === 'password') {
+                togglePassword.src = eyeOpenIcon;
+                togglePassword.alt = "Show password";
+            } else {
+                togglePassword.src = eyeSlashIcon;
+                togglePassword.alt = "Hide password";
+            }
+        });
+    }
 
 });

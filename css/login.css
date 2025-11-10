@@ -1,19 +1,162 @@
-/* This CSS file is ONLY for the LoginPage.html */
-
+/* Login-only Sub-header Bar */
 .login-page-subheader {
-    background-color: #F4F4F4; /* Your requested white background */
-    color: #444444; /* Dark text for visibility on a white background */
+    background-color: #F4F4F4;
+    color: #444444;
     padding: 10px 0;
     text-align: center;
-    
-    /* A subtle border to separate it from the header and page body */
     border-top: 1px solid #B7B7B7;
     border-bottom: 1px solid #B7B7B7;
 }
 
 .login-page-subheader p {
     margin: 0;
-    font-family: var(--font-tertiary); /* 'Roboto' */
-    font-weight: 300; /* 'Light' */
-    font-size: 1.5rem;
+    font-family: var(--font-tertiary);
+    font-weight: 300;
+    font-size: 1.60rem; 
+}
+
+/*
+  Login Box Overrides
+*/
+
+/* targets the .page-container on the login page to center the box */
+body:has(#login-form) .page-container {
+    max-width: 550px; /* Constrain the width of the login box */
+}
+
+/* 1. "TAO Staff Login" Title Bar */
+body:has(#login-form) .page-title-bar {
+    background-color: #28A745;
+    border-radius: 8px 8px 0 0;
+    border: none;
+    padding: 20px 24px;
+}
+
+body:has(#login-form) .page-title-bar h2 {
+    color: #FFFFFF;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 1.50rem;
+}
+
+/* white box that holds the form */
+body:has(#login-form) .content-card {
+    border-color: #B7B7B7;
+    border-radius: 0 0 8px 8px; /* rounded bottom corners */
+    border-top: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/*
+  Login Form Styles
+*/
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* 2 & 3. "Email" / "Password" Labels */
+.form-group label {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #695C5C;
+}
+
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="text"] {
+    padding: 14px 16px;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 1);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    width: 100%;
+    box-sizing: border-box; /* IMPORTANT: Includes padding in the width */
+}
+
+/* 2 & 3. Placeholder Text */
+.form-group input::placeholder {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+/* Wrapper for the password icon */
+.password-wrapper {
+    position: relative;
+}
+
+/* styles the <img> tag. */
+.eye-icon {
+    position: absolute; 
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%); 
+    width: 20px;
+    height: 20px;
+    color: #695C5C;
+    cursor: pointer;
+    object-fit: contain; 
+}
+
+/* 4. "Remember Me" Text */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-check label {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    color: #000C14;
+}
+
+/* 5. "Forgot Password?" Link */
+.forgot-password {
+    color: #E86969;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* 6. "Login" Button */
+.login-button {
+    background-color: #5CB85C;
+    color: #FFFFFF;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.login-button:hover {
+    background-color: #4a9e4a;
 }

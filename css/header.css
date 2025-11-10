@@ -1,19 +1,14 @@
-/* This is css/header.css */
-
-/* We define all your specific fonts and colors as CSS Variables.
-  This makes your code incredibly easy to maintain.
-*/
 :root {
-    /* Your new brand colors */
+    /* brand colors */
     --color-bsu-red: #D84046;
     --color-bsu-blue: #0086C9;
     
-    /* Your new text colors */
+    /* text colors */
     --color-text-dark-1: #050505;
     --color-text-dark-2: #282828;
     --color-text-light: #FFFFFF;
 
-    /* Your new font families */
+    /* font families */
     --font-primary: 'Averia Serif Libre', serif;
     --font-secondary: 'Roboto Condensed', sans-serif;
     --font-tertiary: 'Roboto', sans-serif;
@@ -35,9 +30,9 @@
     position: relative; 
     z-index: 2; 
 
-    /* Background image with the white fade */
+    /* Background image */
     background: 
-        url('../assets/header-main-bg.jpg'); /* ../ means "go up one folder" */
+        url('../assets/header-main-bg.jpg');
     
     background-size: cover; 
     background-position: center; 
@@ -50,8 +45,8 @@
 }
 
 .site-header__logo {
-    height: 120px; /* Adjust as needed */
-    width: 120px;  /* Adjust as needed */
+    height: 120px;
+    width: 120px;
 }
 
 .site-header__title-container {
@@ -64,40 +59,40 @@
 .site-header__title-container p,
 .site-header__title-container h1 {
     margin: 0;
-    line-height: 1.1; /* Tighter line height for large fonts */
+    line-height: 1.1; 
 }
 
 /* 1. "Batangas State University" */
 .site-header__university-name {
     font-family: var(--font-primary); 
-    font-weight: 700; /* Bold */
-    font-size: 2rem; /* 32px */
+    font-weight: 700;
+    font-size: 2rem;
     color: var(--color-text-dark-1); /* #050505 */
 }
 
 /* 2. "The National Engineering University" */
 .site-header__subtitle {
     font-family: var(--font-secondary);
-    font-weight: 700; /* Bold */
-    font-size: 1.75rem; /* 50px */
+    font-weight: 700;
+    font-size: 1.75rem;
     color: var(--color-bsu-red); /* #D84046 */
 }
 
 /* 3. "Testing and Admission Portal" */
 .site-header__portal-title {
     font-family: var(--font-tertiary);
-    font-size: 3rem; /* 48px */
-    font-weight: 900; /* Black */
+    font-size: 3rem;
+    font-weight: 900;
     color: var(--color-text-dark-2); /* #282828 */
     padding-top: 5px;
 }
 
-/* This is the gate overlay PNG */
+/* gate overlay PNG */
 .site-header__gate-overlay {
     position: absolute;
     bottom: 0; 
     right: 0;
-    height: 120px; /* Adjust this height as needed */
+    height: 120px;
     z-index: 3; 
 }
 
@@ -116,7 +111,7 @@
     font-family: var(--font-tertiary);
     font-weight: 700; /* Bold */
     font-style: italic;
-    font-size: 1rem; /* 16px */
-    max-width: calc(100% - 300px); /* Adjust 300px as needed */
+    font-size: 1.1rem;
+    max-width: calc(100% - 300px);
     margin-left: 100px;
 }
