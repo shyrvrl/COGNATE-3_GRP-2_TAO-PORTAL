@@ -1,0 +1,215 @@
+/* css/evaluation.css */
+
+/* --- General Form Layout --- */
+
+.applicant-info-header {
+    background-color: transparent;
+    padding-bottom: 20px;
+}
+
+.form-page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+    margin: 5px 0 0 0;
+}
+
+.applicant-review-details {
+    font-size: 16px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.evaluation-form-wrapper {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 30px;
+}
+
+.evaluation-section {
+    padding: 20px 0;
+    border-bottom: 3px solid #C8E6C9; 
+}
+
+.evaluation-section:last-child {
+    border-bottom: none;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #38A169; /* Green accent color */
+    margin-bottom: 25px;
+}
+
+/* --- Form Input Styling --- */
+
+.form-row {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.half-width {
+    flex: 1 1 45%; 
+}
+
+.form-group.third-width {
+    flex: 1 1 30%; 
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+input[type="number"],
+select,
+textarea {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    width: 100%;
+    font-family: inherit;
+    color: #333;
+    transition: border-color 0.2s;
+}
+
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--active-link-blue);
+    outline: none;
+}
+
+.form-note {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+.form-required-note {
+    font-size: 12px;
+    color: #D32F2F; /* Red color */
+    margin-top: 10px;
+}
+
+/* --- DROPDOWN HOVER FIX --- */
+
+/* CRITICAL FIX HERE: Use :hover on :not(:checked) to fight the browser default. 
+   Note: This remains partially browser-dependent, especially on Windows/Chrome. */
+select option:hover:not(:checked) {
+    background-color: #E8F5E9 !important; /* Light Green background, use !important to override OS */
+    color: #333 !important; /* Darker text */
+}
+
+select option:checked {
+    background-color: #C8E6C9 !important; /* Slightly darker green for selected item */
+    color: #333 !important; 
+}
+
+
+/* --- Verification Checklist Table (Section 1) --- */
+
+.verification-checklist-table {
+    width: 100%;
+    overflow-x: auto;
+    
+    border-radius: 8px; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+    border: 1px solid #eee; 
+}
+
+.verification-checklist-table table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px; 
+    overflow: hidden; 
+}
+
+.verification-checklist-table th,
+.verification-checklist-table td {
+    padding: 12px 15px;
+    border: 1px solid #eee;
+    text-align: left;
+    font-size: 14px;
+    color: #555;
+}
+
+.verification-checklist-table th {
+    background-color: #F0FDF4; 
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+    border-top: none; 
+}
+
+/* Status Badges inside table cells */
+.status-pass, .status-good {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.status-pass {
+    background-color: #E8F5E9; 
+    color: #4CAF50; 
+}
+
+.status-good {
+    background-color: #E3F2FD; 
+    color: #2196F3; 
+}
+
+/* --- Final Assessment Section (Section 3) --- */
+
+.final-assessment-grid {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.btn-submit-evaluation {
+    background-color: #4CAF50; 
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px; 
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 20px;
+
+    /* Flexbox for icon and text alignment */
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+
+/* Style the custom PNG icon */
+.submit-icon {
+    width: 20px; 
+    height: 20px;
+    margin-right: 8px; 
+    
+    /* Flips black/dark colors to white for contrast */
+    filter: invert(100%); 
+}
+
+.btn-submit-evaluation:hover {
+    background-color: #43A047;
+}
