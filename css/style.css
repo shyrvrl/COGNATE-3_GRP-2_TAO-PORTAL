@@ -1,0 +1,59 @@
+/*
+  STEP 1: Import your specific Google Fonts.
+  This MUST be at the very top of the file.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:wght@700&family=Roboto+Condensed:wght@700&family=Roboto:ital,wght@0,300;0,900;1,700&display=swap');
+
+/* STEP 2: Import your component-specific stylesheets.
+*/
+@import url('header.css');
+
+/* STEP 3: Your global body and layout styles.
+*/
+body {
+    /* Set the *default* font for the whole site. 
+       We'll use Roboto, as it's your most common font. */
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #ffffff;
+    padding: 0;
+    margin: 0;
+}
+
+/*
+  MAIN LAYOUT STYLES
+  These styles will be common for all pages *after* the login.
+*/
+.page-container {
+    max-width: 1200px;
+    margin: 20px auto; /* Center the main content with 20px space on top/bottom */
+    padding: 0 20px;   /* Add 20px space on the left/right */
+}
+
+/*
+  REUSABLE SUB-HEADER COMPONENT
+  This is the green bar you saw on the other pages.
+*/
+.page-title-bar {
+    background-color: #1e8731; /* Get exact color from Figma */
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px 8px 0 0; /* Rounded top corners */
+}
+
+.page-title-bar h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/*
+  REUSABLE CONTENT CARD
+  This is the main white box that holds your content.
+*/
+.content-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 0 0 8px 8px; /* Rounded bottom corners to match the title bar */
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
