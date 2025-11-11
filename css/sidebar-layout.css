@@ -153,8 +153,8 @@
 }
 
 .nav-item.active {
-    background-color: rgba(0, 134, 201, 0.1); 
-    border-left: 5px solid var(--active-link-blue); 
+    background-color: #38A169;
+    color: #fff;
     padding-left: 15px; 
     font-weight: 700;
 }

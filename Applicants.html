@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicants | TAO Portal</title>
+    
+    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/sidebar-layout.css"> 
+    <link rel="stylesheet" href="css/header.css"> 
+    <link rel="stylesheet" href="css/dashboard.css"> <link rel="stylesheet" href="css/applicants.css"> 
+    
+</head>
+<body class="page-applicants">
+
+    <div class="app-shell">
+        
+        <div id="app-header"></div> 
+        <div class="data-privacy-notice-full">
+            <p>Pursuant to <strong>Republic Act No. 10173</strong>, also known as the <strong>Data Privacy Act of 2012</strong>, the Batangas State University, the National Engineering University recognizes its commitment to protect and respect the privacy of its customers and/or stakeholders and ensure that all information collected from them are all processed in accordance with the principles of transparency, legitimate purpose and proportionality mandated under the Data Privacy Act of 2012</p>
+        </div>
+        
+        <div class="main-layout-wrapper">
+            
+            <div id="app-sidebar"></div>
+
+            <div class="main-content-area">
+                <div class="portal-content-wrapper">
+                    <main class="page-content">
+                        
+                        <h1 class="page-title">Application Management</h1>
+                        <p class="page-subtitle">
+                            Access, filter, and manage all students applications based on status and program.
+                        </p>
+
+                        <nav class="tab-nav">
+                            <a href="#summary" class="tab-link" data-tab="summary-content">Summary</a>
+                            <a href="#list" class="tab-link active" data-tab="list-content">Application List</a>
+                        </nav>
+
+                        <div class="tab-content-wrapper">
+                            
+                        <div id="summary-content" class="tab-content">
+                            
+                            <div class="summary-wrapper-card">
+                                
+                                <p class="summary-subheader">
+                                    This is the current summary of admission...
+                                </p>
+
+                                <section class="summary-stats-grid">
+                                    <div class="stat-card" style="--card-color: #D84046;">
+                                        <span class="stat-card__value">85</span>
+                                        <span class="stat-card__label">For Evaluation</span>
+                                        <span class="stat-card__meta">Pending first-level review</span>
+                                    </div>
+                                    <div class="stat-card" style="--card-color: #E3B40B;">
+                                        <span class="stat-card__value">45</span>
+                                        <span class="stat-card__label">For Interview Status</span>
+                                        <span class="stat-card__meta">Scheduled or awaiting feedback</span>
+                                    </div>
+                                    <div class="stat-card" style="--card-color: #0086C9;">
+                                        <span class="stat-card__value">20</span>
+                                        <span class="stat-card__label">For Approving</span>
+                                        <span class="stat-card__meta">Ready for final decision</span>
+                                    </div>
+                                    <div class="stat-card" style="--card-color: #5CB85C;">
+                                        <span class="stat-card__value">1,250</span>
+                                        <span class="stat-card__label">Total Applications</span>
+                                        <span class="stat-card__meta">Total applications received</span>
+                                    </div>
+                                </section> </div> </div>
+                            
+                            <div id="list-content" class="tab-content active">
+                                
+                                <div class="content-card">
+
+                                    <div class="filter-box">
+                                        <div class="filter-header">
+                                            <h3>Filter Applications</h3>
+                                            <a href="#" id="hide-filters-btn">Hide Filters</a>
+                                        </div>
+                                        <form class="filter-form" id="filter-form">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="filter-status">All Status</label>
+                                                    <select id="filter-status">
+                                                        <option>All Status</option>
+                                                        <option>For Evaluation</option>
+                                                        <option>For Interview</option>
+                                                        <option>Accept</option>
+                                                        <option>Reject</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="filter-program">All Programs</label>
+                                                    <select id="filter-program">
+                                                        <option>All Programs</option>
+                                                        <option>BS Information Technology</option>
+                                                        <option>BS Computer Engineering</option>
+                                                        <option>BS Civil Engineering</option>
+                                                        <option>BS Mechanical Engineering</option>
+                                                        <option>BS Electronics Engineering</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group date-range">
+                                                    <label>Date Submitted Range</label>
+                                                    <div class="date-inputs">
+                                                        <input type="date" id="date-start">
+                                                        <span>to</span>
+                                                        <input type="date" id="date-end">
+                                                    </div>
+                                                </div>
+                                                <div class="form-buttons">
+                                                    <button type="submit" class="btn-primary">Apply Filters</button>
+                                                    <button type="reset" class="btn-secondary">Clear Filters</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div class="search-export-bar">
+                                        <div class="search-input-wrapper">
+                                            <span class="search-icon">🔍</span>
+                                            <input type="text" placeholder="Search by Applicant Name or Applicant No.">
+                                        </div>
+                                        <button class="btn-export">Export List (10)</button>
+                                    </div>
+
+                                    <div class="applicant-table-container">
+                                        <table class="applicant-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>APPLICANT NO.</th>
+                                                    <th>NAME</th>
+                                                    <th>PROGRAM APPLIED</th>
+                                                    <th>SUBMISSION DATE</th>
+                                                    <th>CURRENT STATUS</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="clickable-row" onclick="window.location='applicant-details.html';">
+                                                    <td data-label="Applicant No.">2025-0001</td>
+                                                    <td data-label="Name" class="applicant-name">Dela Cruz, Juan M.</td>
+                                                    <td data-label="Program">BS Information Technology</td>
+                                                    <td data-label="Date">2025-09-08</td>
+                                                    <td data-label="Status"><span class="status-final">Review Docs</span></td>
+                                                </tr>
+                                                <tr class="clickable-row" onclick="window.location='applicant-details.html';">
+                                                    <td data-label="Applicant No.">2025-0002</td>
+                                                    <td data-label="Name" class="applicant-name">Garcia, Maria S.</td>
+                                                    <td data-label="Program">BS Civil Engineering</td>
+                                                    <td data-label="Date">2025-09-11</td>
+                                                    <td data-label="Status"><span class="status-review">Final Review</span></td>
+                                                </tr>
+                                                <tr class="clickable-row" onclick="window.location='applicant-details.html';">
+                                                    <td data-label="Applicant No.">2025-0003</td>
+                                                    <td data-label="Name" class="applicant-name">Ramos, Sofia S.</td>
+                                                    <td data-label="Program">BS Computer Engineering</td>
+                                                    <td data-label="Date">2025-10-01</td>
+                                                    <td data-label="Status"><span class="status-change">Change Request</span></td>
+                                                </tr>
+                                                <tr class="clickable-row" onclick="window.location='applicant-details.html';">
+                                                    <td data-label="Applicant No.">2025-0004</td>
+                                                    <td data-label="Name" class="applicant-name">Lope, Kenneth D.</td>
+                                                    <td data-label="Program">BS Computer Science</td>
+                                                    <td data-label="Date">2025-08-15</td>
+                                                    <td data-label="Status"><span class="status-approved">Approved</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <nav class="pagination">
+                                        <a href="#" class="page-link disabled">&larr; Previous</a>
+                                        <span class="page-info">Page 1 of 5</span>
+                                        <a href="#" class="page-link">Next &rarr;</a>
+                                    </nav>
+
+                                </div>
+                            </div>
+                        </div>
+                        
+                        </main>
+                </div>
+            </div>
+        </div>
+        
+    </div> 
+    
+    <div class="modal-overlay hidden" id="filter-modal">
+        <div class="modal-box">
+            <h2>Filters Applied</h2>
+            <p>The list is now filtered using the following criteria:</p>
+            <ul class="filter-summary-list">
+                <li><strong>Status:</strong> For Evaluation (85)</li>
+                <li><strong>Program:</strong> BS Information Technology</li>
+                <li><strong>Date Range:</strong> 2025-10-09 to 2025-11-10</li>
+            </ul>
+            <button class="btn-primary" id="close-modal-btn">Close</button>
+        </div>
+    </div>
+
+    <script src="js/componentLoader.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+</html>
