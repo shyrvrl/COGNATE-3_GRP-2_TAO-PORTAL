@@ -1,5 +1,22 @@
 /* css/interview-status.css */
 
+/* Import Inter font (if not already imported globally) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* CSS Variables (Ensured all semicolons are present) */
+:root {
+    --color-red: #D84046;
+    --color-yellow: #E3B40B;
+    --color-blue: #0086C9;
+    --color-green: #5CB85C;
+    --notice-blue-text: #005697;
+    --notice-green-text: #387D38;
+    --notice-red-text: #A82E33;
+    --text-primary: #4C4343;
+    --text-secondary: #140505;
+    --font-inter: 'Inter', sans-serif; 
+}
+
 /* --- Page Header/Title Styling --- */
 
 .page-header-container {
@@ -33,7 +50,6 @@
     padding: 30px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     border-radius: 8px;
-    /* content-card class already provides white background and padding */
 }
 
 .applicant-name-title {
@@ -54,16 +70,19 @@
 .form-row {
     display: flex;
     gap: 30px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
+/* 🎯 CORE FIX: Setting flex: 1 makes the groups take equal width in a form-row */
 .form-group {
     display: flex;
     flex-direction: column;
+    flex: 1; 
 }
 
+/* This class is now redundant for the 2-column layout but kept here for compatibility */
 .form-group.quarter-width {
-    flex: 1 1 20%; /* Allows four inputs per row on a wide screen */
+    flex: 1 1 20%;
 }
 
 .form-group label {
@@ -76,24 +95,33 @@
 /* Base Input/Select Style Overrides */
 .custom-select,
 .custom-input {
-    padding: 10px 12px;
+    padding: 12px 14px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 16px;
     box-sizing: border-box;
     width: 100%;
     font-family: inherit;
+    transition: all 0.2s ease;
 }
 
-/* Special styling for Date Input with icon placement */
-.form-group:nth-child(3) { /* Targets the date input group */
+.custom-select:focus,
+.custom-input:focus {
+    border-color: var(--color-blue);
+    box-shadow: 0 0 0 3px rgba(0, 134, 201, 0.2);
+    outline: none;
+}
+
+
+/* 🎯 STABILITY FIX: Targets the date input group using the new class */
+.form-group.date-group {
     position: relative;
 }
 
 .calendar-icon {
     position: absolute;
     right: 10px;
-    top: 35px; /* Adjust based on padding/label height */
+    top: 40px;
     color: #999;
     font-size: 20px;
     cursor: pointer;
@@ -103,36 +131,52 @@
 
 .schedule-status-area {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
-    padding-top: 20px;
-    margin-top: 20px;
-    border-top: 1px solid #eee;
+    padding-top: 25px;
+    margin-top: 25px;
+    border-top: 2px solid #C8E6C9;
+    gap: 20px;
+}
+
+/* Status Message Display Box */
+#status-message-display {
+    padding: 8px 15px;
+    background-color: #FEF3C7;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 /* Rule to hide the status bar initially */
 .hidden-status {
-    display: none;
+    display: none !important;
 }
 
 .current-status-text {
     font-weight: 600;
-    font-size: 15px;
-    color: #1E8731; /* Green color for scheduled status */
+    font-size: 16px;
+    color: #B45326;
     margin: 0;
 }
 
 .btn-update-schedule {
-    background-color: #4CAF50; 
+    background-color: #4CAF50;
     color: white;
-    padding: 10px 15px;
-    border-radius: 4px;
+    padding: 12px 20px;
+    border-radius: 8px;
     border: none;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
+    transition: background-color 0.2s;
+}
+
+.btn-update-schedule:hover {
+    background-color: #43A047;
 }
 
 .btn-update-schedule .material-icons {
@@ -140,7 +184,7 @@
     margin-right: 5px;
 }
 
-/* --- Success Modal Styling (Initially Hidden) --- */
+/* --- Success Modal Styling --- */
 
 .modal-overlay {
     position: fixed;
@@ -148,11 +192,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 10%;
+    padding-top: 20vh;
     z-index: 1000;
 }
 
@@ -160,46 +204,101 @@
     display: none;
 }
 
-.modal-content {
+/* The main modal content container */
+.modal-content-container {
     background-color: white;
-    border-radius: 8px;
-    width: 400px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 20px;
+    width: 450px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    border-left: 5px solid var(--color-green);
+    box-sizing: border-box;
+    font-family: var(--font-inter);
 }
 
-.success-box {
-    background-color: #E8F5E9; /* Light green background */
-    border: 1px solid #4CAF50;
-    color: #333;
+.success-box-popup {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    text-align: left;
 }
 
 .success-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     margin-bottom: 10px;
 }
 
-.success-box h3 {
-    font-size: 18px;
+.modal-popup-title {
+    font-size: 1.25rem;
     font-weight: 700;
-    color: #4CAF50;
-    margin: 0 0 0 10px;
+    color: var(--text-primary);
+    margin: 0;
 }
 
-.check-icon {
-    color: #4CAF50;
-    font-size: 28px;
+.modal-message-wrapper {
+    margin-bottom: 25px;
 }
 
-.btn-close-modal {
-    background-color: #4CAF50;
+.modal-popup-message {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+    margin: 0;
+    padding-left: 0;
+}
+
+.modal-popup-message strong {
+    font-weight: 700;
+    color: #333;
+}
+
+.modal-close-btn {
+    background-color: var(--color-green);
     color: white;
-    padding: 8px 20px;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 6px;
     border: none;
+    font-size: 1rem;
+    font-weight: 500;
     cursor: pointer;
-    margin-top: 15px;
+    transition: background-color 0.2s;
+    float: right;
+    display: block;
+}
+
+.modal-close-btn:hover {
+    background-color: #4a9e4a;
+}
+
+/* --- Responsiveness: Adjust form layout for small screens --- */
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column; 
+        gap: 0; 
+    }
+
+    .form-group {
+        margin-bottom: 15px; 
+        flex: 1 1 100%; 
+    }
+
+    .form-group.quarter-width {
+        flex: 1 1 100%; 
+    }
+    
+    .schedule-status-area {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    #status-message-display {
+        justify-content: center;
+    }
+    
+    .btn-update-schedule {
+        width: 100%;
+        justify-content: center;
+    }
 }
