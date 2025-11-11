@@ -3,7 +3,7 @@
 .page-title {
     font-family: var(--font-inter);
     font-weight: 700;
-    font-size: 2rem;
+    font-size: 1.75rem;
     color: #38A169;
     margin: 10px 0 0 0;
 }
@@ -11,7 +11,7 @@
 .page-subtitle {
     font-family: var(--font-inter);
     font-weight: 400;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #555;
     margin: 5px 0 30px 0;
 }
