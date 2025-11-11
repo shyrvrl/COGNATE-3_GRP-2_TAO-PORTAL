@@ -1,0 +1,205 @@
+/* css/interview-status.css */
+
+/* --- Page Header/Title Styling --- */
+
+.page-header-container {
+    padding-bottom: 20px;
+}
+
+.back-link {
+    font-size: 14px;
+    color: #888;
+    text-decoration: none;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.page-section-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.page-section-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* --- Main Interview Scheduling Card --- */
+
+.interview-card {
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    /* content-card class already provides white background and padding */
+}
+
+.applicant-name-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    margin: 0 0 20px 0;
+}
+
+/* --- Form Layout (Two Columns) --- */
+
+.scheduling-form {
+    padding-top: 10px;
+}
+
+.form-row {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.quarter-width {
+    flex: 1 1 20%; /* Allows four inputs per row on a wide screen */
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* Base Input/Select Style Overrides */
+.custom-select,
+.custom-input {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    width: 100%;
+    font-family: inherit;
+}
+
+/* Special styling for Date Input with icon placement */
+.form-group:nth-child(3) { /* Targets the date input group */
+    position: relative;
+}
+
+.calendar-icon {
+    position: absolute;
+    right: 10px;
+    top: 35px; /* Adjust based on padding/label height */
+    color: #999;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* --- Status and Button Area --- */
+
+.schedule-status-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* Rule to hide the status bar initially */
+.hidden-status {
+    display: none;
+}
+
+.current-status-text {
+    font-weight: 600;
+    font-size: 15px;
+    color: #1E8731; /* Green color for scheduled status */
+    margin: 0;
+}
+
+.btn-update-schedule {
+    background-color: #4CAF50; 
+    color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.btn-update-schedule .material-icons {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+/* --- Success Modal Styling (Initially Hidden) --- */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 10%;
+    z-index: 1000;
+}
+
+.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 400px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.success-box {
+    background-color: #E8F5E9; /* Light green background */
+    border: 1px solid #4CAF50;
+    color: #333;
+}
+
+.success-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.success-box h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #4CAF50;
+    margin: 0 0 0 10px;
+}
+
+.check-icon {
+    color: #4CAF50;
+    font-size: 28px;
+}
+
+.btn-close-modal {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+}
