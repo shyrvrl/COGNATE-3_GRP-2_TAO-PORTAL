@@ -1,5 +1,5 @@
 /*
-  This is the new, combined global script.js
+  Combined global script.js
   It works WITH componentLoader.js
 */
 
@@ -7,7 +7,7 @@
 
 /**
  * Finds the correct sidebar link and adds the 'active' class.
- * (This is your working sidebar fix)
+ * (Working sidebar fix)
  */
 function initSidebarHighlighting() {
     const dashboardLink = document.querySelector('#nav-dashboard');
@@ -29,7 +29,7 @@ function initSidebarHighlighting() {
 
 /**
  * Adds the show/hide logic to the password toggle icon.
- * (This is your working password toggle)
+ * (Working password toggle)
  */
 function initPasswordToggle() {
     const eyeOpenIcon = "assets/eye-open.png";
@@ -54,7 +54,7 @@ function initPasswordToggle() {
 
 /**
  * Adds the click event listeners for the tab navigation.
- * (This is your working tab script)
+ * (Working tab script)
  */
 function initTabSwitching() {
     const tabNav = document.querySelector('.tab-nav');
@@ -78,7 +78,7 @@ function initTabSwitching() {
 }
 
 /**
- * (THIS IS THE NEW FUNCTION FOR YOUR MODAL)
+ * (NEW FUNCTION FOR MODAL)
  * Adds event listeners for the filter modal popup.
  */
 function initFilterModal() {
