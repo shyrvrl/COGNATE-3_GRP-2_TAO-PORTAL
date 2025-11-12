@@ -1,0 +1,454 @@
+/* css/settings.css */
+
+/* --- Page Title & Structure --- */
+.settings-title {
+    font-family: var(--font-inter);
+    font-weight: 700;
+    font-size: 1.75rem;
+    color: var(--text-primary);
+    margin: 10px 0 0 0;
+}
+
+.settings-subtitle {
+    font-family: var(--font-inter);
+    font-weight: 400;
+    font-size: 1rem;
+    color: #555;
+    margin: 5px 0 30px 0;
+}
+
+/* --- Settings Form Wrapper --- */
+.settings-form-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.settings-section-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 30px;
+    /* NEW: Green Top Border for Section Card */
+    border-top: 5px solid #38A169; 
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.section-title {
+    font-family: var(--font-inter);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #38A169; /* Green accent */
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #C8E6C9;
+}
+
+/* --- 1. Admission Cycle Control --- */
+
+.cycle-control-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.form-group-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group-settings label {
+    font-family: var(--font-inter);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.form-group-settings select,
+.form-group-settings input[type="date"],
+.form-group-settings input[type="text"] {
+    padding: 10px;
+    font-family: var(--font-inter);
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.portal-status-toggle {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    font-family: var(--font-inter);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Custom Checkbox/Toggle Switch (Reusing styles from existing form) */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 25px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 25px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: #38A169;
+}
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+.toggle-label {
+    font-weight: 500;
+    color: #333;
+}
+
+
+/* --- 2. Required Document Checklist --- */
+
+.document-checklist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px; /* To make it look like a single bordered list */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.checklist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+.checklist-item:last-child {
+    border-bottom: none;
+}
+.checklist-item-title {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+    flex-grow: 1;
+}
+
+.required-toggle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #38A169; /* Green border color */
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: transparent; /* Start as transparent/white */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white; /* Hidden checkmark color */
+    font-weight: 900;
+    font-size: 14px;
+    flex-shrink: 0; /* Prevents stretching */
+}
+
+/* Style for when the item is checked (via JS toggle) */
+.required-toggle[data-required="true"] {
+    background-color: #38A169; /* Green background when required */
+}
+
+
+/* NEW STYLES FOR COMBINED INPUT/BUTTON */
+.add-document-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 12px; /* Inner padding for the wrapper */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    margin-top: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Subtle shadow like the image */
+}
+
+.add-document-wrapper input[type="text"] {
+    flex-grow: 1;
+    border: none; /* Remove default border */
+    outline: none;
+    padding: 0; /* Remove padding handled by wrapper */
+    font-size: 1rem;
+    color: #333;
+    background: transparent;
+    font-family: var(--font-inter);
+}
+
+.btn-add-doc {
+    padding: 6px 15px; /* Smaller padding */
+    background-color: #f0f0f0; /* Light gray background */
+    color: #555; /* Dark gray text */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; 
+    font-weight: 500; /* Less bold */
+    font-size: 0.9rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.2s;
+    margin-left: 10px; /* Space between input text and button */
+}
+.btn-add-doc:hover {
+    background-color: #e0e0e0; /* Slightly darker gray on hover */
+}
+
+
+/* --- 3. Staff Access Management --- */
+.staff-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.staff-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.staff-table th,
+.staff-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-family: var(--font-inter);
+    font-size: 0.95rem;
+}
+.staff-table th {
+    background-color: #F0F9F4;
+    font-weight: 700;
+    color: #38A169;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+.staff-table td {
+    color: #333;
+}
+
+/* NEW ROLE COLOR CLASSES */
+.role-admin {
+    color: var(--color-red); /* Red: #D84046 */
+    font-weight: 500;
+}
+.role-evaluator {
+    color: var(--color-yellow); /* Yellow/Orange: #E3B40B */
+    font-weight: 500;
+}
+.role-interviewer {
+    color: var(--color-green); /* Green: #5CB85C */
+    font-weight: 500;
+}
+
+/* Updated Action Link for Staff Table */
+.action-link {
+    color: var(--color-blue);
+    text-decoration: none;
+    transition: color 0.2s;
+    /* Removed margin-right: 15px; to group them or use flex */
+}
+.action-link:hover {
+    color: #005697;
+    text-decoration: underline;
+}
+
+/* Adjust alignment for the action column */
+.staff-table thead th:last-child {
+    text-align: right; /* Header aligns right (as seen in image) */
+}
+.staff-table tbody td:last-child {
+    text-align: right; /* Content aligns right (as seen in image) */
+}
+
+
+/* --- Footer & Action Button Styles (Matching new design) --- */
+.footer-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+/* 1. New style for 'View All Staff' button (Light Gray/Green Text) */
+.btn-view-all-staff {
+    padding: 8px 25px;
+    background-color: #e0e0e0; 
+    color: #555; 
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-decoration: none; /* Required for the <a> tag */
+    display: inline-block;
+}
+.btn-view-all-staff:hover {
+    background-color: #ccc;
+}
+
+
+/* 2. New style for 'SAVE ALL SETTINGS' button (Primary Green) */
+.btn-save-settings-green {
+    background-color: #38A169; /* Green accent */
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-transform: uppercase;
+}
+.btn-save-settings-green:hover {
+    background-color: #296a47; 
+}
+
+
+/* Overwrite old red save button if it exists */
+.btn-save-settings {
+    /* Kept for compatibility, but the HTML will use btn-save-settings-green */
+    background-color: #38A169;
+}
+
+
+/* --- Modal Styling --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 10vh;
+    z-index: 1000;
+}
+
+.modal-overlay.visible {
+    display: flex;
+}
+
+.modal-content-container {
+    background-color: white;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    border-top: 5px solid var(--color-blue); /* Use blue for action/edit */
+    box-sizing: border-box;
+    font-family: var(--font-inter);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-staff-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-blue);
+    margin-bottom: 20px;
+    display: block;
+}
+
+.modal-form-group label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.modal-form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    margin-bottom: 25px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.btn-cancel {
+    background-color: #f0f0f0;
+    color: #555;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-save-modal {
+    background-color: var(--color-blue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+/* --- Responsiveness --- */
+@media (max-width: 768px) {
+    .settings-section-card {
+        padding: 20px;
+    }
+    .cycle-control-grid {
+        grid-template-columns: 1fr;
+    }
+    .staff-table-container {
+        border: 1px solid #eee;
+        border-radius: 8px;
+    }
+}

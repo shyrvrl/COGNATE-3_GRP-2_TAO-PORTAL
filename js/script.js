@@ -1,3 +1,5 @@
+// js/script.js
+
 /*
   Combined global script.js
   It works WITH componentLoader.js
@@ -6,24 +8,42 @@
 // --- 1. DEFINE OUR INTERACTIVITY FUNCTIONS ---
 
 /**
- * Finds the correct sidebar link and adds the 'active' class.
- * (Working sidebar fix)
+ * Finds the correct sidebar link and adds the 'active' class based on the current page's URL.
+ * This handles top-level navigation as well as nested pages (like Applicant Details under Applicants).
  */
 function initSidebarHighlighting() {
-    const dashboardLink = document.querySelector('#nav-dashboard');
-    if (!dashboardLink) {
-        return; 
-    }
     const allLinks = document.querySelectorAll('.nav-item');
     allLinks.forEach(item => {
         item.classList.remove('active');
     });
-    if (document.body.classList.contains('page-dashboard')) {
-        dashboardLink.classList.add('active');
-    } else if (document.body.classList.contains('page-applicants')) {
-        document.querySelector('#nav-applicants')?.classList.add('active');
-    } else if (document.body.classList.contains('page-interview')) {
-        document.querySelector('#nav-interview')?.classList.add('active');
+
+    // Get the current URL path (e.g., /Applicants.html or /Applicant-Details.html)
+    const path = window.location.pathname;
+    
+    // Determine which top-level module the current page belongs to
+    let activeModuleId = null;
+
+    if (path.includes('Dashboard.html') || path.includes('DB-Notices-Archive.html')) {
+        activeModuleId = '#nav-dashboard';
+    } 
+    // The following pages belong to the 'Applicants' module
+    else if (path.includes('Applicants.html') || 
+             path.includes('Applicant-Details.html') ||
+             path.includes('ViewDocuments.html') ||
+             path.includes('StartEvaluation.html')) {
+        activeModuleId = '#nav-applicants';
+    } 
+    else if (path.includes('InterviewStatus.html')) {
+        activeModuleId = '#nav-interview';
+    } 
+    // The following pages belong to the 'Settings' module
+    else if (path.includes('Settings.html') || path.includes('StaffList.html')) {
+        activeModuleId = '#nav-settings';
+    }
+
+    // Apply the active class to the determined module link
+    if (activeModuleId) {
+        document.querySelector(activeModuleId)?.classList.add('active');
     }
 }
 
@@ -118,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Run these scripts immediately. They are safe.
     initPasswordToggle();
     initTabSwitching();
-    initFilterModal(); // <-- THIS IS THE ONLY NEW LINE IN THIS BLOCK
+    initFilterModal(); 
     
     
     // --- 3. THE WORKING SIDEBAR FIX (Untouched) ---
@@ -126,14 +146,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const sidebarPlaceholder = document.getElementById('app-sidebar');
 
     if (!sidebarPlaceholder) {
-        return; // This is the login page
+        return; // This is the login page or a page without a sidebar
     }
 
     // Create an observer to "watch" the placeholder
     const observer = new MutationObserver((mutationsList, obs) => {
         for(const mutation of mutationsList) {
             if (mutation.type === 'childList') {
-                if (document.querySelector('.nav-item')) {
+                if (document.querySelector('.nav-links')) {
                     // Sidebar is loaded! Run our highlighting function.
                     initSidebarHighlighting();
                     // We're done, stop watching.
