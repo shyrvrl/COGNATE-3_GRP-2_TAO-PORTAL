@@ -34,44 +34,158 @@
                         </p>
 
                         <nav class="tab-nav">
-                            <a href="#summary" class="tab-link" data-tab="summary-content">Summary</a>
-                            <a href="#list" class="tab-link active" data-tab="list-content">Application List</a>
+                            <a href="#summary" class="tab-link active" data-tab="summary-content">Summary</a>
+                            <a href="#list" class="tab-link" data-tab="list-content">Application List</a>
                         </nav>
 
                         <div class="tab-content-wrapper">
                             
-                        <div id="summary-content" class="tab-content">
-                            
-                            <div class="summary-wrapper-card">
+                            <div id="summary-content" class="tab-content active">
                                 
-                                <p class="summary-subheader">
-                                    This is the current summary of admission...
-                                </p>
-
                                 <section class="summary-stats-grid">
-                                    <div class="stat-card" style="--card-color: #D84046;">
-                                        <span class="stat-card__value">85</span>
-                                        <span class="stat-card__label">For Evaluation</span>
-                                        <span class="stat-card__meta">Pending first-level review</span>
+                                    <div class="summary-card" style="--card-color: var(--color-green);">
+                                        <span class="summary-card__label">Total Applications</span>
+                                        <span class="summary-card__value">1,250</span>
+                                        <span class="summary-card__meta">Overall received for year 2025</span>
                                     </div>
-                                    <div class="stat-card" style="--card-color: #E3B40B;">
-                                        <span class="stat-card__value">45</span>
-                                        <span class="stat-card__label">For Interview Status</span>
-                                        <span class="stat-card__meta">Scheduled or awaiting feedback</span>
+                                    <div class="summary-card" style="--card-color: var(--color-yellow);">
+                                        <span class="summary-card__label">Tentative Admission Rate</span>
+                                        <span class="summary-card__value">94.7%</span>
+                                        <span class="summary-card__meta">Approved vs. Completed</span>
                                     </div>
-                                    <div class="stat-card" style="--card-color: #0086C9;">
-                                        <span class="stat-card__value">20</span>
-                                        <span class="stat-card__label">For Approving</span>
-                                        <span class="stat-card__meta">Ready for final decision</span>
+                                    <div class="summary-card" style="--card-color: var(--color-red);">
+                                        <span class="summary-card__label">Documents Incomplete</span>
+                                        <span class="summary-card__value">150</span>
+                                        <span class="summary-card__meta">Waiting for applicant action (Workload Focus)</span>
                                     </div>
-                                    <div class="stat-card" style="--card-color: #5CB85C;">
-                                        <span class="stat-card__value">1,250</span>
-                                        <span class="stat-card__label">Total Applications</span>
-                                        <span class="stat-card__meta">Total applications received</span>
+                                    <div class="summary-card" style="--card-color: var(--color-blue);">
+                                        <span class="summary-card__label">Average Time to Evaluate</span>
+                                        <span class="summary-card__value">2.4<span class="value-unit">Days</span></span>
+                                        <span class="summary-card__meta">Time from submission to final document decision</span>
                                     </div>
-                                </section> </div> </div>
-                            
-                            <div id="list-content" class="tab-content active">
+                                </section>
+                                
+                                <div class="summary-table-wrapper">
+                                    <table class="summary-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Status</th>
+                                                <th>Count</th>
+                                                <th>Percentage</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="status-text-red">Documents Incomplete</td>
+                                                <td>150</td>
+                                                <td>12.0%</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="status-text-yellow">For Evaluation (Current Workload)</td>
+                                                <td>85</td>
+                                                <td>6.8%</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="status-text-blue">For Interview Status</td>
+                                                <td>45</td>
+                                                <td>3.6%</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="status-text-approve">For Approving (Final Decision)</td>
+                                                <td>20</td>
+                                                <td>1.6%</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="status-text-green">Approved</td>
+                                                <td>900</td>
+                                                <td>72.0%</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="status-text-gray">Rejected</td>
+                                                <td>50</td>
+                                                <td>4.0%</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>TOTAL</th>
+                                                <th>1,250</th>
+                                                <th>100%</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                
+                                </div>
+                                
+                                <div class="program-table-wrapper">
+                                    <h3 class="table-title">Top Program Application</h3>
+                                    <table class="program-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Program</th>
+                                                <th>Count</th>
+                                                <th>Acceptance Rate</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>BS Information Technology (BSIT)</td>
+                                                <td>350</td>
+                                                <td><span class="rate-green">95%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>BS Civil Engineering (BSCE)</td>
+                                                <td>250</td>
+                                                <td><span class="rate-blue">88%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>BS Computer Science (BSCS)</td>
+                                                <td>200</td>
+                                                <td><span class="rate-green">92%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>BS Electrical Engineering (BSEE)</td>
+                                                <td>150</td>
+                                                <td><span class="rate-yellow">78%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>BS Computer Engineering (BSCpE)</td>
+                                                <td>100</td>
+                                                <td><span class="rate-red">68%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Other Programs</td>
+                                                <td>200</td>
+                                                <td><span class="rate-green">90%</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="school-table-wrapper">
+                                    <h3 class="table-title">Applicant School Type Breakdown</h3>
+                                    <table class="school-table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Public School Applicants</td>
+                                                <td><span class="rate-public">60.0% (750)</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Private School Applicants</td>
+                                                <td><span class="rate-private">32.0% (400)</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>ALS/Other Applicants</td>
+                                                <td><span class="rate-als">8.0% (100)</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>   
+                        </div>
+
+                            <div id="list-content" class="tab-content">
                                 
                                 <div class="content-card">
 

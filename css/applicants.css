@@ -33,7 +33,7 @@
     color: #888;
     text-decoration: none;
     padding: 10px 20px;
-    margin-bottom: -2px; /* Pulls tab up to sit on the border */
+    margin-bottom: -2px;
     border-bottom: 3px solid transparent;
 }
 
@@ -165,43 +165,212 @@
 
 /* Summary Tab Styles */
 
-/* 1. Section Box */
-.summary-wrapper-card {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-/* 2. Sub-header */
-.summary-subheader {
-    font-family: var(--font-inter);
-    font-size: 1rem;
-    font-weight: 450;
-    color: #716B6B; 
-    margin: 0 0 20px 0;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
-}
-
-/* 3. 2x2 Grid */
 .summary-stats-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; 
+    grid-template-columns: 1fr 1fr;
     gap: 30px;
 }
 
-/* 4. Reusing .stat-card styles from dashboard.css */
-.summary-stats-grid .stat-card__value {
-    font-size: 2.5rem;
+.summary-card {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    border-left: 5px solid var(--card-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    display: flex;
+    flex-direction: column;
 }
-.summary-stats-grid .stat-card__label {
-    font-size: 1.35rem;
+
+.summary-card__label {
+    font-family: var(--font-inter);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 10px;
 }
-.summary-stats-grid .stat-card__meta {
+
+.summary-card__value {
+    font-family: var(--font-inter);
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--card-color);
+    line-height: 1.2;
+    margin-bottom: 10px;
+}
+
+/* Special style for the "Days" unit */
+.summary-card__value .value-unit {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--color-blue);
+    margin-left: 5px;
+}
+
+.summary-card__meta {
+    font-family: var(--font-inter);
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: #716B6B;
+    line-height: 1.4;
+}
+
+
+/* Summary Tab - Table Styles */
+
+.summary-table-wrapper {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    margin-top: 30px;
+}
+
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-inter);
+}
+
+.summary-table thead th {
+    text-align: left;
     font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+    padding: 15px 10px;
+    border-bottom: 2px solid #f0f0f0;
+    background-color: #F4F7F9;
 }
+
+.summary-table tbody td {
+    padding: 15px 10px;
+    font-size: 0.9rem;
+    color: #333;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+/* Align numbers to the center */
+.summary-table thead th:nth-child(2),
+.summary-table tbody td:nth-child(2),
+.summary-table tfoot th:nth-child(2),
+.summary-table thead th:nth-child(3),
+.summary-table tbody td:nth-child(3),
+.summary-table tfoot th:nth-child(3) {
+    text-align: center;
+}
+
+/* Colored Text Styles */
+.summary-table .status-text-red { color: #D84046; font-weight: 500; }
+.summary-table .status-text-yellow { color: #E3B40B; font-weight: 500; }
+.summary-table .status-text-blue { color: #0086C9; font-weight: 500; }
+.summary-table .status-text-approve { color: #4268E4; font-weight: 500; }
+.summary-table .status-text-green { color: #28A745; font-weight: 500; }
+.summary-table .status-text-gray { color: #888888; font-weight: 500; }
+
+/* Total Footer Row */
+.summary-table tfoot th {
+    text-align: left;
+    padding: 15px 10px 0 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+    border-top: 2px solid #f0f0f0;
+}
+
+/* Summary Tab - Top Program Table Styles */
+
+.program-table-wrapper {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    margin-top: 30px;
+}
+
+/* Title above the table */
+.table-title {
+    font-family: var(--font-inter);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 20px 0;
+}
+
+.program-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-inter);
+}
+
+.program-table thead th {
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+    padding: 15px 10px;
+    border-bottom: 2px solid #f0f0f0;
+    background-color: #F4F7F9;
+}
+
+.program-table tbody td {
+    padding: 15px 10px;
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 500;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+/* Align numbers to the center */
+.program-table thead th:nth-child(2),
+.program-table tbody td:nth-child(2),
+.program-table thead th:nth-child(3),
+.program-table tbody td:nth-child(3) {
+    text-align: center;
+}
+
+/* Conditional Colors for Acceptance Rate */
+.rate-green { color: #5CB85C; font-weight: 600; }
+.rate-blue { color: #0086C9; font-weight: 600; }
+.rate-yellow { color: #E3B40B; font-weight: 600; }
+.rate-red { color: #D84046; font-weight: 600; }
+
+
+/* Summary Tab - School Type Table Styles */
+
+.school-table-wrapper {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    margin-top: 30px; /* Space between the two tables */
+}
+
+.school-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-inter);
+}
+
+.school-table tbody td {
+    padding: 16px 10px;
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 600;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.school-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.school-table tbody td:nth-child(2) {
+    text-align: right;
+    font-size: 0.9rem;
+}
+
+/* Rate Color Codes */
+.rate-public { color: #4268E4; }
+.rate-private { color: #5CB85C; }
+.rate-als { color: #E3B40B; }
 
 
 /* Search and Export Bar */
