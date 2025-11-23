@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TAO Portal</title>
+    
+    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/sidebar-layout.css"> 
+    <link rel="stylesheet" href="css/header.css"> 
+    
+    <link rel="stylesheet" href="css/dashboard.css"> 
+    
+</head>
+<body class="page-dashboard">
+
+    <div class="app-shell">
+        
+        <div id="app-header"></div> 
+    
+        <div class="data-privacy-notice-full">
+            <p>Pursuant to <strong>Republic Act No. 10173</strong>, also known as the <strong>Data Privacy Act of 2012</strong>, the Batangas State University, the National Engineering University recognizes its commitment to protect and respect the privacy of its customers and/or stakeholders and ensure that all information collected from them are all processed in accordance with the principles of transparency, legitimate purpose and proportionality mandated under the Data Privacy Act of 2012</p>
+        </div>
+        
+        <div class="main-layout-wrapper">
+            
+            <div id="app-sidebar"></div>
+
+            <div class="main-content-area">
+                
+                <div class="portal-content-wrapper">
+                    
+                    <main class="page-content">
+                        
+                        <h1 class="dashboard-title">Dashboard</h1>
+                        <p class="dashboard-subtitle">
+                            Welcome! Here's a summary of the admission status.
+                        </p>
+            
+                        <section class="stats-card-row">
+                            <div class="stat-card" style="--card-color: #D84046;">
+                                <span class="stat-card__value">85</span>
+                                <span class="stat-card__label">For Evaluation</span>
+                                <span class="stat-card__meta">Pending first-level review</span>
+                            </div>
+                            <div class="stat-card" style="--card-color: #E3B40B;">
+                                <span class="stat-card__value">45</span>
+                                <span class="stat-card__label">For Interview Status</span>
+                                <span class="stat-card__meta">Scheduled or awaiting feedback</span>
+                            </div>
+                            <div class="stat-card" style="--card-color: #0086C9;">
+                                <span class="stat-card__value">20</span>
+                                <span class="stat-card__label">For Approving</span>
+                                <span class="stat-card__meta">Ready for final decision</span>
+                            </div>
+                            <div class="stat-card" style="--card-color: #5CB85C;">
+                                <span class="stat-card__value">1,250</span>
+                                <span class="stat-card__label">Total Applications</span>
+                                <span class="stat-card__meta">Total applications received</span>
+                            </div>
+                        </section>
+            
+                        <div class="dashboard-grid">
+                            
+                            <section class="notices-card">
+                                <div class="card-header notices-header">
+                                    <h2>System Notices & Announcements</h2>
+                                </div>
+                                <div class="notices-list">
+                                    <div class="notice-item notice-blue">
+                                        <h3>Admission Policy Update - June 2025 Cycle</h3>
+                                        <p>New guidelines fo Certificate of Unavailability of subjects have been uploaded to the Documents tab. Reviewers must comply starting today.</p>
+                                    </div>
+                                    <div class="notice-item notice-green">
+                                        <h3>System Maintenance Completed</h3>
+                                        <p>The system upgrade was successful. Evaluation scoring stability has been improved. No downtime is expected this week.</p>
+                                    </div>
+                                    <div class="notice-item notice-red">
+                                        <h3>Urgent: Review Form 137 Discrepancies</h3>
+                                        <p>A bug was found affecting Form 137 display for applicants 4001-4010. Please re-check the original file for these applicants.</p>
+                                    </div>
+                                </div>
+                                <a href="DB-notices-archive.html" class="view-all-notices-btn">View All Notices &rarr;</a>
+                            </section>
+            
+                            <div class="right-column">
+                                
+                                <section class="tasks-card">
+                                    
+                                    <div class="card-header">
+                                        <h2>Immediate Tasks</h2>
+                                    </div>
+                                    <ul class="task-list">
+                                        <li>
+                                            <span>Final decision for <strong class="name-blue">J. Dela Cruz</strong></span>
+                                            <button class="task-btn btn-approve">Approve</button>
+                                        </li>
+                                        <li>
+                                            <span>Evaluate docs for <strong class="name-red">M. Garcia</strong></span>
+                                            <button class="task-btn btn-start">Start</button>
+                                        </li>
+                                        <li>
+                                            <span>Interview schedule for <strong class="name-yellow">S. Reyes</strong></span>
+                                            <button class="task-btn btn-schedule">Schedule</button>
+                                        </li>
+                                    </ul>
+
+                                    <div class="card-header">
+                                        <h2>Quick Actions</h2>
+                                    </div>
+                                    <a href="Applicants.html" class="quick-action-btn">View All Applicants</a>
+
+                                </section>
+                                </div>
+            
+                        </div> <section class="final-stats-row grid-span-2">
+                            <div class="stat-card" style="--card-color: var(--color-green);">
+                                <span class="stat-card__label">Approved Applicants</span>
+                                <span class="stat-card__value">980</span>
+                                <span class="stat-card__meta">Total accepted students</span>
+                            </div>
+                            <div class="stat-card" style="--card-color: var(--color-red);">
+                                <span class="stat-card__label">Rejected Applicants</span>
+                                <span class="stat-card__value">100</span>
+                                <span class="stat-card__meta">Ready for final decision</span>
+                            </div>
+                        </section>
+                        
+                    </main>
+                    </div>
+            </div>
+        </div>
+        
+    </div> 
+    
+    <script src="js/componentLoader.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+</html>

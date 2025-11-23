@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Evaluation | TAO Portal</title>
+    
+    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/sidebar-layout.css"> 
+    <link rel="stylesheet" href="css/header.css"> 
+    <link rel="stylesheet" href="css/evaluation.css"> 
+    </head>
+<body class="page-applicants">
+
+    <div class="app-shell">
+        
+        <div id="app-header"></div> 
+    
+        <div class="data-privacy-notice-full">
+            <p>Pursuant to <strong>Republic Act No. 10173</strong>, also known as the <strong>Data Privacy Act of 2012</strong>, the Batangas State University, the National Engineering University recognizes its commitment to protect and respect the privacy of its customers and/or stakeholders and ensure that all information collected from them are all processed in accordance with the principles of transparency, legitimate purpose and proportionality mandated under the Data Privacy Act of 2012</p>
+        </div>
+        
+        <div class="main-layout-wrapper">
+            
+            <div id="app-sidebar"></div>
+
+            <div class="main-content-area">
+                
+                <div class="portal-content-wrapper">
+                    
+                    <main class="page-content">
+                        
+                        <div class="applicant-info-header">
+                            <a href="Applicant-Details.html" class="back-link">← Back to Applicant Details</a>
+                            <h2 class="form-page-title">Applicant Evaluation Form</h2>
+                            <p class="applicant-review-details">Reviewing: Dela Cruz, Juan M. (Application No: 2025-0001) for BS Information Technology</p>
+                        </div>
+
+                        <form class="evaluation-form-wrapper">
+                            
+                            <div class="evaluation-section section-1">
+                                <h3 class="section-title">1. Document and Integrity Verification Checklist</h3>
+                                <div class="verification-checklist-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>DOCUMENT TITLE</th>
+                                                <th>GRADE MIN 75</th>
+                                                <th>GRADE INTEGRITY</th>
+                                                <th>FILE QUALITY</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>SHS Form 137</td>
+                                                <td><span class="status-pass">Pass</span></td>
+                                                <td><span class="status-pass">Pass</span></td>
+                                                <td><span class="status-good">Good</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Grades Form 1</td>
+                                                <td><span class="status-pass">Pass</span></td>
+                                                <td><span class="status-pass">Pass</span></td>
+                                                <td><span class="status-good">Good</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>JHS Form 137</td>
+                                                <td><span class="status-pass">Pass</span></td>
+                                                <td><span class="status-pass">Pass</span></td>
+                                                <td><span class="status-good">Good</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>SHS Completion Certificate</td>
+                                                <td>N/A</td>
+                                                <td>N/A</td>
+                                                <td><span class="status-good">Good</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="evaluation-section section-2">
+                                <h3 class="section-title">2. Academic Background (Max 50 Pts)</h3>
+                                <div class="form-row">
+                                    <div class="form-group half-width">
+                                        <label for="gwa-score">SHS GWA Score (Max 30 pts)</label>
+                                        <input type="number" id="gwa-score" name="gwa-score" value="28" min="0" max="30">
+                                    </div>
+
+                                    <div class="form-group half-width">
+                                        <label for="strand-relevance">SHS Strand Relevance (Max 20 pts)</label>
+                                        <select id="strand-relevance" name="strand-relevance">
+                                            <option value="highly_relevant">Highly Relevant (e.g., GAS/ICT for IT)</option>
+                                            <option value="relevant">Relevant (e.g., STEM/Engineering)</option>
+                                            <option value="low_relevant">Low Relevant</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <p class="form-note">Based on officially verified Form 137 GWA. Choose the option whose SHS strand and specialization matches the program applied for.</p>
+                            </div>
+
+                            <div class="evaluation-section section-3">
+                                <h3 class="section-title">3. Final Assessment</h3>
+                                <div class="final-assessment-grid">
+                                    <div class="form-group third-width">
+                                        <label for="final-recommendation">Final Recommendation</label>
+                                        <select id="final-recommendation" name="final-recommendation">
+                                            <option value="pending">Pending</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="reject">Reject</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group third-width">
+                                        <label for="app-status">Update Application Status</label>
+                                        <select id="app-status" name="app-status">
+                                            <option value="for_evaluation">For Evaluation</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="for_interview">For Interview</option>
+                                            <option value="change_request">Change Request</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <p class="form-note">Set the status visible to other reviewers and the applicant.</p>
+
+                                <div class="form-group full-width">
+                                    <label for="reviewer-comments">Reviewer Comments</label>
+                                    <textarea id="reviewer-comments" name="reviewer-comments" rows="4" placeholder="Provide detailed notes on the evaluation results, document flags or final decision basis."></textarea>
+                                </div>
+                                <p class="form-required-note">Required for Audit/Record keeping.</p>
+
+                                
+<button type="submit" class="btn btn-submit-evaluation">
+                                    <img src="assets/submit-eval-icon.png" alt="Submit Icon" class="submit-icon">
+                                    Submit Final Evaluation
+                                </button>
+                            </div>
+                        </form>
+                        
+                    </main>
+                </div>
+            </div>
+        </div>
+        
+    </div> 
+
+    <script src="js/componentLoader.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+</html>
