@@ -1,0 +1,169 @@
+/* css/sidebar-layout.css */
+
+/* Define the Sidebar Width and key colors */
+:root {
+    --sidebar-width: 350px; 
+    --active-link-blue: rgba(0, 134, 201, 1);
+    --text-color-dark: rgba(76, 67, 67, 1);
+    --text-color-red: rgba(216, 64, 70, 1);
+    --text-color-green: rgba(56, 161, 105, 1);
+}
+
+/* 1. OVERRIDE CENTERING FROM style.css */
+/* Ensures the portal pages break out of the max-width/centering set in style.css */
+.page-container,
+.portal-content-wrapper { 
+    max-width: none !important; 
+    margin: 0 !important;       
+    padding: 0 !important;      
+    width: 100%;
+}
+
+/* --- Data Privacy Notice (Full Width Block) --- */
+.data-privacy-notice-full {
+    background-color: rgba(253, 248, 227, 1); 
+    border: 1px solid rgba(216, 191, 114, 1); 
+    border-radius: 8px;
+    padding: 15px 30px;
+    margin: 20px 30px; 
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #444;
+}
+
+.data-privacy-notice-full p {
+    margin: 0;
+}
+
+
+/* --- MAIN LAYOUT WRAPPER (Flex Container for Sidebar + Content) --- */
+.main-layout-wrapper {
+    display: flex; /* Initiates the two-column layout */
+    width: 100%;
+    flex-grow: 1; /* Allows this section to fill the remaining vertical space */
+}
+
+/* --- Sidebar Container Styling --- */
+.sidebar {
+    width: var(--sidebar-width); 
+    flex-shrink: 0; 
+    background-color: white; 
+    padding: 20px 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    
+    /* Position sticky and height works within the flex parent */
+    height: 100%; 
+    position: sticky; 
+    top: 0;
+    overflow-y: auto; 
+}
+
+/* --- Main Content Area Next to Sidebar --- */
+.main-content-area {
+    flex-grow: 1; 
+    padding: 30px; 
+}
+
+/* --- User Card Styling (Ms. Claire G. Bumagat) --- */
+.user-card {
+    /* Adjusted padding as border is handled by wrapper below */
+    padding: 0 20px 0 20px; 
+    margin-bottom: 0;
+    border-bottom: none;
+    text-align: center;
+}
+
+/* NEW: Horizontal alignment container */
+.user-info-wrapper {
+    display: flex; /* Align icon and text side-by-side */
+    align-items: center; /* Vertically center the text/icon */
+    text-align: left; /* Reset text alignment for the block */
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.user-avatar {
+    width: 32px; /* Fixed icon size */
+    height: 32px;
+    margin: 0 10px 0 0; /* Space between icon and name */
+    flex-shrink: 0; 
+    background-color: transparent;
+    border: 0px; 
+    overflow: visible; /* Allows the icon to be visible without clipping */
+}
+
+.user-card-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.user-text {
+    line-height: 1.2;
+}
+
+.user-name {
+    font-size: 18px; 
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 2px;
+    color: var(--text-color-green); 
+    font-family: 'Inter', sans-serif;
+}
+
+.user-role {
+    font-size: 13px; 
+    color: rgba(113, 107, 107, 1); 
+    font-weight: 300;
+    font-family: 'Inter', sans-serif;
+}
+
+/* --- Navigation Link Styling --- */
+.nav-links {
+    list-style: none;
+    padding: 0;
+}
+
+.nav-item {
+    display: flex; 
+    align-items: center; 
+    padding: 15px 20px;
+    margin: 8px 0;
+    text-decoration: none;
+    color: var(--text-color-dark);
+    font-size: 20px;
+    font-weight: normal;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.nav-icon {
+    width: 24px; 
+    height: 24px;
+    margin-right: 15px; 
+    flex-shrink: 0; 
+    opacity: 0.7; 
+}
+
+.nav-item:hover {
+    background-color: #f0f0f0;
+}
+
+.nav-item.active {
+    background-color: #38A169;
+    color: #fff;
+    padding-left: 15px; 
+    font-weight: 700;
+}
+
+.nav-item.active .nav-icon {
+    opacity: 1;
+}
+
+.logout-link {
+    color: var(--text-color-red); 
+    margin-top: 40px; 
+}

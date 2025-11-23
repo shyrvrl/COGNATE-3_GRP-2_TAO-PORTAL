@@ -1,0 +1,220 @@
+/* ============================================= */
+/*  General Page & Header Styles                 */
+/* ============================================= */
+.back-link {
+    display: inline-block;
+    font-family: var(--font-inter);
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #888888;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.applicant-name-title {
+    font-family: var(--font-inter);
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: var(--text-primary);
+    margin: 0 0 5px 0;
+}
+
+.applicant-meta {
+    font-family: var(--font-inter);
+    font-size: 1rem;
+    color: #555;
+    margin: 0;
+}
+
+.header-right {
+    text-align: right;
+}
+
+.status-label {
+    font-family: var(--font-inter);
+    font-size: 0.9rem;
+    color: #777;
+    display: block;
+    margin-bottom: 8px; /* Creates space above the status badge */
+}
+
+
+/* ============================================= */
+/*  Main Card & Grid Layout                      */
+/* ============================================= */
+.details-card {
+    background: #fff;
+    padding: 30px; 
+    border-radius: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.09);
+}
+
+.details-card-grid {
+    display: grid;
+    /* Two columns: a fixed one for the picture, and a flexible one for all info */
+    grid-template-columns: 207px 1fr; 
+    /* Column gap for spacing, row gap will be handled by margins */
+    gap: 0 30px;
+    width: 100%;
+}
+
+
+/* ============================================= */
+/*  Picture Box Styling                          */
+/* ============================================= */
+.picture-placeholder {
+    width: 207px;
+    height: 266px; /* Passport size */
+    background: #f0f0f0;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-weight: 500;
+    object-fit: cover; /* Ensures the image fits well */
+    grid-column: 1 / 2; /* Place in the first column */
+    grid-row: 1 / 2;    /* Place in the first row */
+}
+
+
+/* ============================================= */
+/*  Information Section Styling (Layout Fix)     */
+/* ============================================= */
+
+/* Style for the VERY FIRST info section ("Personal Information") */
+#personal-info {
+    grid-column: 2 / 3; /* Place in the second column */
+    grid-row: 1 / 2;    /* Place in the first row, next to the picture */
+    align-self: center; /* Vertically align this section in the middle */
+}
+
+/* Style for ALL OTHER info sections */
+#emergency-contact,
+#educational-info,
+#grades-info,
+#choices-info {
+    /* Force these sections to span the FULL width, below the first row */
+    grid-column: 1 / -1; 
+    margin-top: 30px; /* Add uniform space above each full-width section */
+}
+
+.info-section h3 {
+    font-family: var(--font-inter);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #38A169;
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.info-section h4 {
+    font-family: var(--font-inter);
+    font-weight: 850;
+    font-size: 1rem;
+    color: #555;
+    margin: 20px 0 15px 0;
+}
+
+
+/* ============================================= */
+/*  Universal Grid for Fields (Inside Sections)  */
+/* ============================================= */
+.info-section .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 20px 24px; 
+}
+
+/* Specific override for Emergency Contact to have 3 columns */
+#emergency-contact .info-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.info-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-field label {
+    font-family: var(--font-inter);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #888;
+}
+
+.info-field span {
+    font-family: var(--font-inter);
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.info-field.full-width {
+    grid-column: 1 / -1; /* For fields like Address that span the full width */
+}
+
+
+/* ============================================= */
+/*  Button Footer                                */
+/* ============================================= */
+.button-footer {
+    padding: 20px 30px;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+    border-radius: 0 0 20px 20px;
+    /* Negative margin pulls the footer to the edges of the padded card */
+    margin: 30px -30px -30px -30px; 
+    display: flex;
+    justify-content: flex-start;
+}
+
+.btn-view-docs {
+    padding: 12px 25px;
+    font-family: var(--font-inter);
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: var(--color-blue);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-view-docs:hover {
+    background-color: #2e6290;
+}
+
+.btn-view-docs .icon {
+    font-size: 1.2rem;
+}
+
+.status-value {
+    padding: 6px 14px;
+    border-radius: 15px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.status-green { background-color: #389850; } /* Approved */
+.status-blue { background-color: #4268E4; }  /* For Approving */
+.status-red { background-color: #4E41BF; }   /* For Evaluation */
+.status-yellow { background-color: #946225; }/* For Interview */
+.status-gray { background-color: #BF4146; }  /* Rejected */
+.status-default { background-color: #6c757d; }/* Default/Other */

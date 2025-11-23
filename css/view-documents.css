@@ -1,0 +1,218 @@
+/* css/view-documents.css */
+
+/* --- Applicant Details Summary (Header Section) --- */
+
+.applicant-details-summary {
+    background-color: transparent; 
+    margin-bottom: 25px;
+}
+
+.applicant-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.back-link {
+    display: block;
+    font-size: 14px;
+    color: #888888;
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+
+.applicant-name {
+    font-size: 30px;
+    font-weight: 700;
+    color: #4C4343; /* Dark brown/gray */
+    margin: 0;
+}
+
+.applicant-program-details {
+    font-size: 18px;
+    color: #4C4343;
+    margin: 5px 0 0 0;
+}
+
+
+/* --- Document Review Grid (Two main blocks - now stacking vertically) --- */
+
+.documents-content-grid {
+    /* FIX: Removed 'display: flex' and 'gap' to force stacking */
+    width: 100%; 
+    margin-top: 20px; 
+}
+
+/* Document List Area (Top Block) */
+.document-list-container {
+    /* FIX: Allows the block to stretch full width of the main content area */
+    width: 100%; 
+    flex-shrink: 0;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    border-radius: 8px;
+    overflow: hidden; 
+    /* Spacing between list and preview block */
+    margin-bottom: 30px; 
+}
+
+.list-header {
+    background-color: #E6F3EA; 
+    padding: 15px 20px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.list-header h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--text-color-green); 
+    margin: 0;
+}
+
+/* --- Document List Item Styling (Reusable Component) --- */
+
+.document-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #E0E0E0;
+    transition: background-color 0.2s;
+}
+
+.document-item:hover {
+    background-color: #f9f9f9;
+}
+
+.document-item.active {
+    background-color: #F8F8F8; 
+    border-left: 5px solid #28A745; 
+    padding-left: 15px; 
+}
+
+.document-title {
+    font-weight: 500;
+    font-size: 16px;
+    color: #4C4343;
+    margin: 0;
+}
+
+.document-meta {
+    font-weight: normal;
+    font-size: 12px;
+    color: #888888;
+    margin: 3px 0 0 0;
+}
+
+/* --- Status Badge Styling --- */
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px; 
+    font-weight: 500;
+    font-size: 12px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.status-verified {
+    background-color: #5CB85C; 
+    color: white; 
+}
+
+.status-for-review {
+    background-color: #FEF3C7; 
+    color: #695C5C; 
+}
+
+/* --- Document Preview Area (Bottom Block) --- */
+
+.document-preview-container {
+    /* FIX: Ensure this block also takes full width */
+    width: 100%; 
+    flex-grow: 1; 
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    border-radius: 8px;
+    padding: 30px;
+    min-height: 500px; 
+    position: relative;
+}
+
+.preview-actions-header {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.preview-content {
+    padding-top: 100px;
+    text-align: center;
+}
+
+.preview-icon {
+    font-size: 80px;
+    color: #ccc;
+    display: block;
+    margin: 0 auto 10px auto;
+}
+
+.text-center-title {
+    font-weight: 700;
+    font-size: 20px;
+    color: #666;
+    margin-top: 15px;
+}
+
+.text-center-meta {
+    font-size: 14px;
+    color: #999;
+}
+
+/* --- Action Button Styling (General for this page) --- */
+
+.btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none; 
+    display: inline-block;
+}
+
+.btn-primary-green {
+    background-color: #28a745; 
+    color: white;
+}
+
+.btn-warning-yellow {
+    background-color: #FFC107; 
+    color: white; 
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.btn.disabled { background-color: #ccc; cursor: not-allowed; }
+
+.status-approved, .status-pass {
+    background-color: #E8F5E9; 
+    color: #2E7D32; 
+    border: 1px solid #C8E6C9;
+}
+
+.status-rejected, .status-fail {
+    background-color: #FFEBEE; 
+    color: #C62828; 
+    border: 1px solid #FFCDD2;
+}   
+
+.status-pending, .status-for-review {
+    background-color: #FFF3E0; 
+    color: #EF6C00; 
+    border: 1px solid #FFE0B2;
+}

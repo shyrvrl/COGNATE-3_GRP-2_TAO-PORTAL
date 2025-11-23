@@ -1,0 +1,299 @@
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;800&display=swap');
+
+/* CSS Variables */
+:root {
+    --color-red: #D84046;
+    --color-yellow: #E3B40B;
+    --color-blue: #0086C9;
+    --color-green: #5CB85C;
+    --notice-blue-text: #005697;
+    --notice-green-text: #387D38;
+    --notice-red-text: #A82E33;
+    --text-primary: #4C4343;
+    --text-secondary: #140505;
+    --font-inter: 'Inter', sans-serif;
+}
+
+/* Page Content Styling */
+.dashboard-title {
+    font-family: var(--font-inter);
+    font-weight: 700;
+    font-size: 1.80rem;
+    color: var(--text-primary);
+    margin: 10px 0 0 0;
+}
+
+.dashboard-subtitle {
+    font-family: var(--font-inter);
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 5px 0 30px 0;
+}
+
+/* Stat Card Styles (Top Row) */
+.stats-card-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 24px;
+    border-left: 5px solid var(--card-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-card__value {
+    font-family: var(--font-inter);
+    font-weight: 800;
+    font-size: 2.25rem;
+    color: var(--card-color);
+    line-height: 1;
+}
+
+.stat-card__label {
+    font-family: var(--font-inter);
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #333;
+    margin-top: 10px;
+}
+
+.stat-card__meta {
+    font-family: var(--font-inter);
+    font-weight: 300;
+    font-size: 0.85rem;
+    color: #716B6B;
+    margin-top: 5px;
+}
+
+
+/* Main Grid Layout & Card Styles */
+
+/* Reusable white card style */
+.notices-card,
+.tasks-card,
+.actions-card,
+.final-stats-row .stat-card {
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+.card-header h2 {
+    margin: 0;
+    font-family: var(--font-inter);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.card-header a {
+    font-family: var(--font-inter);
+    font-size: 0.9rem;
+    color: var(--color-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* SPECIFIC CONTENT STYLES */
+
+/* Notices */
+.notices-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    margin-bottom: 20px;
+}
+
+.notice-item { 
+    border-left: none;
+    padding: 15px; 
+    background: #fdfdfd; 
+    border-radius: 15px; 
+    border: 1px solid #ddd;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: all 0.2s ease-in-out;
+}
+
+.notice-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.notice-item h3 { 
+    font-family: var(--font-inter); 
+    font-size: 1rem; 
+    font-weight: 700;
+    margin: 0 0 4px 0; 
+}
+
+.notice-item p { 
+    font-family: var(--font-inter); 
+    font-size: 0.9rem; 
+    margin: 0; 
+    color: #555;
+}
+
+/* Specific notice item colors */
+.notice-blue {
+    border-color: var(--color-blue);
+}
+.notice-blue h3 {
+    color: var(--notice-blue-text);
+}
+.notice-blue p {
+    color: var(--notice-blue-text);
+}
+
+.notice-green {
+    border-color: var(--color-green);
+}
+.notice-green h3 {
+    color: var(--notice-green-text);
+}
+.notice-green p {
+    color: var(--notice-green-text);
+}
+
+.notice-red {
+    border-color: var(--color-red);
+}
+.notice-red h3 {
+    color: var(--notice-red-text);
+}
+.notice-red p {
+    color: var(--notice-red-text);
+}
+
+
+/* View All Notices Button */
+.view-all-notices-btn {
+    display: block;
+    text-align: right;
+    color: #D84046;
+    text-decoration: none;
+    font-family: var(--font-inter);
+    font-weight: 500;
+    font-size: 1rem;
+    margin-top: 10px;
+    padding: 10px 0;
+    transition: color 0.2s ease-in-out;
+}
+
+.view-all-notices-btn:hover {
+    color: #9C2A2F;
+    text-decoration: underline;
+}
+
+/* Tasks */
+.task-list { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+    margin-bottom: 30px;
+}
+
+.task-list li { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 12px 0; 
+}
+
+.task-list li:last-child { border: none; }
+.task-list span { font-family: var(--font-inter); font-size: 0.9rem; }
+
+/* Styles for Colored Names */
+.name-blue { color: var(--color-blue); }
+.name-red { color: var(--color-red); }
+.name-yellow { color: var(--color-yellow); }
+
+.task-btn { 
+    border: none; 
+    border-radius: 15px; 
+    padding: 8px 14px; 
+    font-size: 0.8rem; 
+    font-weight: 600; 
+    color: white; 
+    cursor: pointer; 
+    min-width: 90px;
+    text-align: center;
+}
+
+.btn-approve { background-color: var(--color-blue); }
+.btn-start { background-color: var(--color-red); }
+.btn-schedule { background-color: var(--color-yellow); }
+
+.btn-approve:hover { background-color: #005697; }
+.btn-start:hover { background-color: #9C2A2F; }
+.btn-schedule:hover { background-color: #b8ac5c; }
+
+/* Quick Action */
+.quick-action-btn { display: block; 
+    background-color: var(--color-green); 
+    color: white; 
+    text-align: center; 
+    padding: 14px; 
+    border-radius: 15px; 
+    text-decoration: none; 
+    font-family: var(--font-inter); 
+    font-weight: 600; 
+    font-size: 1rem; 
+}
+
+.quick-action-btn:hover { background-color: #4a9e4a; }
+
+.dashboard-grid-footer {
+    display: grid;
+    /* This is the key change to allow for 3 items */
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 30px;
+}
+
+/* These existing rules can remain, just ensure they target the right parent class */
+.dashboard-grid-footer .stat-card {
+    border-left: 5px solid var(--card-color);
+}
+.dashboard-grid-footer .stat-card__value {
+    font-size: 2.2rem;
+}
+.dashboard-grid-footer .stat-card__label {
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: #4C4343;
+    margin-top: 5px;
+}
+.dashboard-grid-footer .stat-card__meta {
+    font-size: 1rem;
+}
