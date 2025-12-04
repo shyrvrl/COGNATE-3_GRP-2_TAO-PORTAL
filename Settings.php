@@ -85,6 +85,33 @@
                                     <a href="StaffList.php" class="btn-view-all-staff">View All Staff</a>
                                 </div>
                             </div>
+
+                            <!-- SECTION 3: ACCOUNT SECURITY -->
+                            <div class="settings-section-card" id="security-section">
+                                <h2 class="section-title">3. Account Security</h2>
+                                <p class="settings-subtitle">Change your account password.</p>
+                                
+                                <div class="cycle-control-grid">
+                                    <div class="form-group-settings">
+                                        <label for="current-password">Current Password</label>
+                                        <input type="password" id="current-password" placeholder="Enter current password">
+                                    </div>
+                                    <div class="form-group-settings">
+                                        <label for="new-password">New Password</label>
+                                        <input type="password" id="new-password" placeholder="Enter new password">
+                                    </div>
+                                    <div class="form-group-settings">
+                                        <label for="confirm-password">Confirm New Password</label>
+                                        <input type="password" id="confirm-password" placeholder="Repeat new password">
+                                    </div>
+                                </div>
+
+                                <div class="form-group-settings" style="align-items: flex-end; margin-top: 10px;">
+                                    <button type="button" id="btn-change-password" class="btn-save-settings-green" style="background-color: var(--color-blue);">Update Password</button>
+                                </div>
+                                <p id="password-message" style="margin-top: 15px; font-weight: 600; font-size: 0.9rem;"></p>
+                            </div>
+
                         </form>
                         
                     </main>

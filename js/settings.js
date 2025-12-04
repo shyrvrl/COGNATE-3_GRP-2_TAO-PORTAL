@@ -211,6 +211,82 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- 5. CHANGE PASSWORD LOGIC ---
+    const btnChangePass = document.getElementById('btn-change-password');
+    const inputCurrent = document.getElementById('current-password');
+    const inputNew = document.getElementById('new-password');
+    const inputConfirm = document.getElementById('confirm-password');
+    const passMessage = document.getElementById('password-message');
+
+    if (btnChangePass) {
+        btnChangePass.addEventListener('click', () => {
+            // Clear previous messages
+            passMessage.textContent = '';
+            passMessage.style.color = '#333';
+
+            const currentVal = inputCurrent.value;
+            const newVal = inputNew.value;
+            const confirmVal = inputConfirm.value;
+
+            // Simple Client-side Validation
+            if (!currentVal || !newVal || !confirmVal) {
+                passMessage.textContent = "Please fill in all password fields.";
+                passMessage.style.color = "var(--color-red)";
+                return;
+            }
+
+            if (newVal !== confirmVal) {
+                passMessage.textContent = "New passwords do not match.";
+                passMessage.style.color = "var(--color-red)";
+                return;
+            }
+
+            if (newVal.length < 6) {
+                passMessage.textContent = "Password must be at least 6 characters.";
+                passMessage.style.color = "var(--color-red)";
+                return;
+            }
+
+            // Disable button
+            btnChangePass.textContent = "Updating...";
+            btnChangePass.disabled = true;
+
+            // API Call
+            fetch('api/change_password.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    current_password: currentVal,
+                    new_password: newVal,
+                    confirm_password: confirmVal
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    passMessage.textContent = "Password updated successfully!";
+                    passMessage.style.color = "var(--color-green)";
+                    // Clear inputs
+                    inputCurrent.value = '';
+                    inputNew.value = '';
+                    inputConfirm.value = '';
+                } else {
+                    passMessage.textContent = "Error: " + data.message;
+                    passMessage.style.color = "var(--color-red)";
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                passMessage.textContent = "A network error occurred.";
+                passMessage.style.color = "var(--color-red)";
+            })
+            .finally(() => {
+                btnChangePass.textContent = "Update Password";
+                btnChangePass.disabled = false;
+            });
+        });
+    }
+
     // Save Role via API
     if(saveRoleBtn) {
         saveRoleBtn.addEventListener('click', () => {
