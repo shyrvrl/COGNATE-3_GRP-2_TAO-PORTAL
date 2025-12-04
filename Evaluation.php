@@ -60,7 +60,7 @@
                                         <select id="app-status" name="app-status" required>
                                             <option value="For Evaluation">For Evaluation</option>
                                             <option value="For Interview">For Interview</option>
-                                            <option value="For Approving">For Approving</option>
+                                            <option value="For Approval">For Approval</option>
                                             <option value="Approved">Approved</option>
                                             <option value="Rejected">Rejected</option>
                                         </select>

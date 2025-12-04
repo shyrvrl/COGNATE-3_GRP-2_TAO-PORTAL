@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             const canEvaluate = currentUserRole && !currentUserRole.includes('Admin');
-            const activeStatuses = ['For Evaluation', 'For Interview', 'For Approving'];
+            const activeStatuses = ['For Evaluation', 'For Interview', 'For Approval'];
 
             // Show the button ONLY if unassigned, user is not an admin, and status is active.
             if (!isAssigned && canEvaluate && activeStatuses.includes(app.application_status)) {

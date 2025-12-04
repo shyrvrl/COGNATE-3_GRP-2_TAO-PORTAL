@@ -48,7 +48,7 @@ try {
             COUNT(*) AS total_applications,
             SUM(CASE WHEN application_status = 'For Evaluation' THEN 1 ELSE 0 END) AS for_evaluation,
             SUM(CASE WHEN application_status = 'For Interview' THEN 1 ELSE 0 END) AS for_interview,
-            SUM(CASE WHEN application_status = 'For Approving' THEN 1 ELSE 0 END) AS for_approving,
+            SUM(CASE WHEN application_status = 'For Approval' THEN 1 ELSE 0 END) AS for_approval,
             SUM(CASE WHEN application_status = 'Approved' THEN 1 ELSE 0 END) AS approved,
             SUM(CASE WHEN application_status = 'Rejected' THEN 1 ELSE 0 END) AS rejected,
             SUM(CASE WHEN evaluator_id = ? THEN 1 ELSE 0 END) AS my_evaluated

@@ -1,5 +1,5 @@
 <?php
-// api/get_applications.php (FINAL, VERIFIED, AND CORRECTED)
+// api/get_applications.php
 session_start();
 include 'db_connect.php';
 
@@ -21,7 +21,7 @@ $response = [
         'programs' => [],
         'statuses' => []
     ],
-    'current_user_id' => $current_user_id, // COMMA WAS MISSING HERE
+    'current_user_id' => $current_user_id,
     'current_user_role' => $current_user_role
 ];
 
@@ -48,6 +48,7 @@ $main_query = "
         app.id, app.application_no, app.student_name, app.choice1_program, 
         app.submission_timestamp, app.application_status, 
         app.evaluator_id,
+        app.last_updated, -- Included for debugging/verification if needed
         sa.full_name AS evaluator_name 
     FROM applications AS app
     LEFT JOIN staff_accounts AS sa ON app.evaluator_id = sa.id
@@ -75,7 +76,7 @@ if (!empty($_GET['assignment_status'])) {
     } 
     elseif ($_GET['assignment_status'] === 'me') {
         $main_query .= " AND app.evaluator_id = ?";
-        $params[] = $current_user_id; // $current_user_id is already defined at the top
+        $params[] = $current_user_id; 
         $types .= 'i'; 
     }
 }
@@ -90,7 +91,11 @@ if (!empty($_GET['date_end'])) {
     $types .= 's';
 }
 
-$main_query .= " ORDER BY app.submission_timestamp ASC";
+// --- MODIFIED SORTING LOGIC ---
+// Sort by last_updated ASC.
+// Items recently modified (larger timestamp) go to the bottom.
+// app.id is added as a tie-breaker to prevent rows from jumping around if times are identical.
+$main_query .= " ORDER BY app.last_updated ASC, app.id ASC";
 
 // Execute the query
 $stmt = $conn->prepare($main_query);

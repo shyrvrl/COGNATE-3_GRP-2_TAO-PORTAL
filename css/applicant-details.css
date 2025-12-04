@@ -213,7 +213,7 @@
 }
 
 .status-green { background-color: #389850; } /* Approved */
-.status-blue { background-color: #4268E4; }  /* For Approving */
+.status-blue { background-color: #4268E4; }  /* For Approval */
 .status-red { background-color: #4E41BF; }   /* For Evaluation */
 .status-yellow { background-color: #946225; }/* For Interview */
 .status-gray { background-color: #BF4146; }  /* Rejected */

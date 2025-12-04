@@ -79,7 +79,7 @@
             
                         </div> 
 
-                        <!-- BOTTOM ROW: For Evaluation, For Interview, For Approving -->
+                        <!-- BOTTOM ROW: For Evaluation, For Interview, For Approval -->
                         <section class="dashboard-grid-footer grid-span-2">
                             <!-- 1. For Evaluation (Red/Orange) -->
                             <div class="stat-card" style="--card-color: #D84046;">
@@ -95,9 +95,9 @@
                                 <span class="stat-card__meta">Awaiting interview results</span>
                             </div>
                             
-                            <!-- 3. For Approving (Blue) -->
+                            <!-- 3. For Approval (Blue) -->
                             <div class="stat-card" style="--card-color: #0086C9;">
-                                <span class="stat-card__label">For Approving</span>
+                                <span class="stat-card__label">For Approval</span>
                                 <span class="stat-card__value" id="stat-approving-count">...</span>
                                 <span class="stat-card__meta">Final validation stage</span>
                             </div>

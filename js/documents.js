@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 evalBtn.textContent = 'Evaluation Finalized';
                 evalBtn.classList.add('disabled'); 
                 evalBtn.style.pointerEvents = 'none'; // Ensure it's unclickable
-            } else if (status === 'For Interview' || status === 'For Approving') {
+            } else if (status === 'For Interview' || status === 'For Approval') {
                 evalBtn.textContent = 'Edit Evaluation';
             } else { 
                 evalBtn.textContent = 'Start Evaluation';
