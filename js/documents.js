@@ -16,18 +16,18 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'status-pending'; // Default (Yellow/Orange)
     };
 
-    // --- Function to show the document preview ---
-    const showPreview = (document) => {
-        // Use relative path to ensure it works on server and localhost
-        const documentUrl = `api/get_document.php?id=${document.id}`;
+    const showPreview = (doc) => {
+        const documentUrl = `api/get_document.php?id=${doc.id}`;
         
         let previewHtml = '';
-        const fileType = document.file_path.split('.').pop().toLowerCase();
+        const fileType = doc.file_path.split('.').pop().toLowerCase();
+        const isTargetDoc = doc.document_type && doc.document_type.toLowerCase().includes("form 137");
+        const heightStyle = isTargetDoc ? '85vh' : '100%';
 
         if (['pdf'].includes(fileType)) {
-            previewHtml = `<embed src="${documentUrl}" type="application/pdf" width="100%" height="100%">`;
+            previewHtml = `<embed src="${documentUrl}" type="application/pdf" width="100%" style="height: ${heightStyle}; min-height: 500px;">`;
         } else if (['png', 'jpg', 'jpeg', 'gif'].includes(fileType)) {
-            previewHtml = `<img src="${documentUrl}" alt="${document.document_type}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+            previewHtml = `<img src="${documentUrl}" alt="${doc.document_type}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
         } else {
             previewHtml = `
                 <span class="material-icons preview-icon">folder_zip</span>
