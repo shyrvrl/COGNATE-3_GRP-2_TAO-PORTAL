@@ -1,0 +1,117 @@
+:root {
+    /* brand colors */
+    --color-bsu-red: #D84046;
+    --color-bsu-blue: #0086C9;
+    
+    /* text colors */
+    --color-text-dark-1: #050505;
+    --color-text-dark-2: #282828;
+    --color-text-light: #FFFFFF;
+
+    /* font families */
+    --font-primary: 'Averia Serif Libre', serif;
+    --font-secondary: 'Roboto Condensed', sans-serif;
+    --font-tertiary: 'Roboto', sans-serif;
+}
+
+.site-header {
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: relative; 
+    overflow: hidden; 
+}
+
+.site-header__main {
+    display: flex; 
+    align-items: center;
+    padding: 20px 40px; 
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative; 
+    z-index: 2; 
+
+    /* Background image */
+    background: 
+        url('../assets/header-main-bg.jpg');
+    
+    background-size: cover; 
+    background-position: center; 
+}
+
+.site-header__logo-container {
+    margin-right: 20px;
+    position: relative;
+    z-index: 3;
+}
+
+.site-header__logo {
+    height: 120px;
+    width: 120px;
+}
+
+.site-header__title-container {
+    display: flex;
+    flex-direction: column;
+    position: relative; 
+    z-index: 3;
+}
+
+.site-header__title-container p,
+.site-header__title-container h1 {
+    margin: 0;
+    line-height: 1.1; 
+}
+
+/* 1. "Batangas State University" */
+.site-header__university-name {
+    font-family: var(--font-primary); 
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--color-text-dark-1); /* #050505 */
+}
+
+/* 2. "The National Engineering University" */
+.site-header__subtitle {
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    font-size: 1.75rem;
+    color: var(--color-bsu-red); /* #D84046 */
+}
+
+/* 3. "Testing and Admission Portal" */
+.site-header__portal-title {
+    font-family: var(--font-tertiary);
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--color-text-dark-2); /* #282828 */
+    padding-top: 5px;
+}
+
+/* gate overlay PNG */
+.site-header__gate-overlay {
+    position: absolute;
+    bottom: 0; 
+    right: 0;
+    height: 120px;
+    z-index: 3; 
+}
+
+/* 4. "Leading Innovations..." */
+.site-header__banner {
+    background-color: var(--color-bsu-blue); /* #0086C9 */
+    color: var(--color-text-light); /* #FFFFFF */
+    text-align: left;
+    padding: 8px 40px; 
+    position: relative;
+    z-index: 2; 
+}
+
+.site-header__banner p {
+    margin: 0;
+    font-family: var(--font-tertiary);
+    font-weight: 700; /* Bold */
+    font-style: italic;
+    font-size: 1.1rem;
+    max-width: calc(100% - 300px);
+    margin-left: 100px;
+}

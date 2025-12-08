@@ -1,0 +1,79 @@
+<?php include 'api/session_check.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Set New Password | TAO Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div id="app-header"></div>
+    <div class="login-page-subheader"><p>Secure Password Reset</p></div>
+    
+    <div class="login-page-centered-content">
+        <main class="page-container">
+            <div class="page-title-bar"><h2>Create New Password</h2></div>
+            <div class="content-card">
+                <form id="reset-password-form" class="login-form">
+                    <input type="hidden" id="token" name="token">
+                    
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" required>
+                    </div>
+
+                    <div id="reset-message" class="error-message"></div>
+                    <button type="submit" class="login-button">Update Password</button>
+                </form>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/componentLoader.js"></script>
+    <script>
+        // Inline script to handle the logic
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        document.getElementById('token').value = token;
+
+        if(!token) {
+            document.querySelector('.content-card').innerHTML = '<p style="color:red; text-align:center;">Invalid Link. Please request a new one.</p>';
+        }
+
+        document.getElementById('reset-password-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newPass = document.getElementById('new-password').value;
+            const confirmPass = document.getElementById('confirm-password').value;
+            const msgDiv = document.getElementById('reset-message');
+
+            if(newPass !== confirmPass) {
+                msgDiv.textContent = "Passwords do not match.";
+                msgDiv.classList.add('visible');
+                return;
+            }
+
+            fetch('api/process_password_reset.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ token: token, new_password: newPass })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    document.querySelector('.content-card').innerHTML = 
+                        '<div style="text-align:center; color:green;"><h3>Success!</h3><p>Your password has been updated.</p><a href="LoginPage.html" class="login-button" style="display:inline-block; text-decoration:none; margin-top:10px;">Login Now</a></div>';
+                } else {
+                    msgDiv.textContent = data.message;
+                    msgDiv.classList.add('visible');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

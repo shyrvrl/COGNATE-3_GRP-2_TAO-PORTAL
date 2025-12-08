@@ -1,0 +1,130 @@
+<?php include 'api/session_check.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Status | TAO Portal</title>
+    
+    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/sidebar-layout.css"> 
+    <link rel="stylesheet" href="css/header.css"> 
+    <link rel="stylesheet" href="css/interview-status.css"> 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+</head>
+<body class="page-interview">
+
+    <div class="app-shell">
+        
+        <div id="app-header"></div> 
+    
+        <div class="data-privacy-notice-full">
+            <p>Pursuant to <strong>Republic Act No. 10173</strong>, also known as the <strong>Data Privacy Act of 2012</strong>, the Batangas State University, the National Engineering University recognizes its commitment to protect and respect the privacy of its customers and/or stakeholders and ensure that all information collected from them are all processed in accordance with the principles of transparency, legitimate purpose and proportionality mandated under the Data Privacy Act of 2012</p>
+        </div>
+        
+        <div class="main-layout-wrapper">
+            
+            <div id="app-sidebar"></div>
+
+            <div class="main-content-area">
+                
+                <div class="portal-content-wrapper">
+                    
+                    <main class="page-content">
+                        
+                        <div class="page-header-container">
+                            <a href="Applicants.php" class="back-link">← Back to Applicant</a>
+                            <h2 class="page-section-title">Schedule Interview</h2>
+                            <p class="page-section-subtitle">Complete the details below to schedule and officially approve the interview time for the selected student.</p>
+                        </div>
+
+                        <div class="content-card interview-card">
+                            <h3 class="applicant-name-title">Interview for Juan Dela Cruz</h3>
+                            
+                            <form class="scheduling-form">
+                                <div class="form-row">
+                                    <div class="form-group"> 
+                                        <label for="interviewer">Interviewer</label>
+                                        <select id="interviewer" name="interviewer" class="custom-select">
+                                            <option value="">Select an Interviewer...</option>
+                                            <option value="evaluator_a">Evaluator A</option>
+                                            <option value="evaluator_b">Evaluator B</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="time">Time</label>
+                                        <select id="time" name="time" class="custom-select">
+                                            <option value="09:00 AM">09:00 AM</option>
+                                            <option value="10:00 AM" selected>10:00 AM</option>
+                                            <option value="11:00 AM">11:00 AM</option>
+                                            <option value="12:00 PM">12:00 PM</option>
+                                            <option value="01:00 PM">01:00 PM</option>
+                                            <option value="02:00 PM">02:00 PM</option>
+                                            <option value="03:00 PM">03:00 PM</option>
+                                            <option value="04:00 PM">04:00 PM</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group date-group"> 
+                                        <label for="date">Date</label>
+                                        <input type="text" id="date" name="date" placeholder="dd/mm/yyyy" class="custom-input">
+                                        <span class="material-icons calendar-icon">calendar_today</span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="mode">Location / Mode</label>
+                                        <select id="mode" name="mode" class="custom-select">
+                                            <option value="virtual">Virtual Interview</option>
+                                            <option value="in-person">In-Person Interview</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="schedule-status-area">
+                                
+                                    <div id="status-message-display" class="hidden-status">
+                                        <p class="current-status-text"></p>
+                                    </div>
+                                    
+                                    <button type="submit" id="update-schedule-btn" class="btn btn-update-schedule">
+                                        <span class="material-icons">schedule</span> 
+                                        Update Schedule and Notify Applicant
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                    </main>
+                </div>
+            </div>
+        </div>
+        
+    </div> 
+
+    <div id="schedule-success-modal" class="modal-overlay hidden">
+        <div class="modal-content-container"> 
+            
+            <div class="success-header">
+                <h3 class="modal-popup-title">Schedule Updated!</h3> 
+            </div>
+            <div class="modal-message-wrapper">
+                <p class="modal-popup-message">
+                    <span id="modal-dynamic-text">The interview is now scheduled...</span>
+                </p>
+            </div>
+            <button id="close-modal-btn" class="btn modal-close-btn">Close</button> 
+            
+        </div>
+    </div>
+
+    <script src="js/global.js" defer></script>
+    <script src="js/interview.js" defer></script>
+    <script src="js/componentLoader.js"></script>
+    <script src="js/script.js"></script>
+    
+</body>
+</html>

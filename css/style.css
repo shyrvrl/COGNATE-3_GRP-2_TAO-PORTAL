@@ -1,0 +1,80 @@
+/*
+ 1: Google Fonts imports
+*/
+@import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:wght@700&family=Roboto+Condensed:wght@700&family=Roboto:ital,wght@0,300;0,400;0,500;0,900;1,700&family=Inter:wght@300;400;500;700&display=swap');
+
+/* 2: component-specific stylesheets imports */
+@import url('header.css');
+@import url('sidebar-layout.css'); 
+@import url('dashboard.css'); /* Ensure this is imported for the dashboard cards */
+/* @import url('login.css'); */
+
+/* 3: global body and layout styles. */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+}
+
+body {
+    font-family: 'Inter', 'Roboto', Arial, sans-serif;
+    background-color: #F4F7F9;
+    min-height: 100vh;
+    width: 100%;
+    /* FIX: Make body the root for the whole page shell */
+    display: flex; 
+    flex-direction: column;
+}
+
+/* NEW RULE: App Shell forces content to fill the screen */
+.app-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Base Centered Container (Used by Login Page) */
+.page-container {
+    max-width: 1200px; 
+    margin: 20px auto; 
+    padding: 0 20px;
+}
+
+/* REUSABLE SUB-HEADER COMPONENT */
+.page-title-bar {
+    background-color: #1e8731;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px 8px 0 0;
+}
+
+.page-title-bar h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* REUSABLE CONTENT CARD */
+.content-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 0 0 8px 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* ============================================= */
+/*  Role-Based Access Control (RBAC) Styles      */
+/* ============================================= */
+
+/* 
+  By default, admin-only content is visible.
+  This rule specifically hides it ONLY for users
+  with the 'user-role-evaluator' class on the body.
+*/
+.user-role-evaluator .admin-only {
+    display: none;
+}
+
+/* You can add more rules here for other roles in the future */
