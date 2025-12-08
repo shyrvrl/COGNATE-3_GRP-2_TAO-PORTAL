@@ -64,6 +64,7 @@
                                     <p class="text-center-title">Select a document to preview...</p>
                                     <p class="text-center-meta">Select an item from the list to view its contents and perform verification.</p>
                                 </div>
+                
                             </div>
                             
                         </div>

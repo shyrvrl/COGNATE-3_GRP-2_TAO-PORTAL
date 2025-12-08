@@ -16,8 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     backLink.href = `ViewDocuments.php?id=${applicationId}`;
 
     // --- Configuration ---
-    const gradingTooltip = "For Engineering and Programs with Board Examination - Must have a final grade of 80% or above in Math, Science, and English subjects during Grade 10 and Grade 11 (First and Second Semester).<br><br>For the Bachelor of Secondary Education major in Mathematics / Science - No grade below 85%";
+    const gradingTooltip = "For Engineering and Programs with Board Examination - Must have a final grade of 80% or above in Math, Science, and English subjects.<br><br>For Education - No grade below 85%";
     const stemTooltip = "Engineering programs require a STEM Track";
+    const matchTooltip = "AI Check: Verified Name, Birthdate, Sex, School, and specific subject Grades match the application details.";
 
     const structureConfig = [
         {
@@ -25,15 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
             checks: [
                 { label: "Blurred File Detection", apiKey: "filter_blurred" },
                 { label: "Cropped File Detection", apiKey: "filter_cropped" },
-                { label: "File Size Check", apiKey: "filter_file_size" }
             ]
         },
+        // REMOVED GRADES FORM 1 MATCH CHECK (As requested)
         {
             documentName: "Grades Form 1",
             checks: [
                 { label: "Blurred File Detection", apiKey: "filter_blurred" },
                 { label: "Cropped File Detection", apiKey: "filter_cropped" },
-                { label: "File Size Check", apiKey: "filter_file_size" },
                 { label: "Program-Specific Screening", apiKey: "program_specific_screening", tooltip: stemTooltip },
                 { label: "Grade Requirements Screening", apiKey: "grade_requirements_screening", tooltip: gradingTooltip },
                 { label: "Autofill Completeness", apiKey: "check_autofill_completeness" }
@@ -44,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
             checks: [
                 { label: "Blurred File Detection", apiKey: "filter_blurred" },
                 { label: "Cropped File Detection", apiKey: "filter_cropped" },
-                { label: "File Size Check", apiKey: "filter_file_size" },
+                // Added Detailed Match Check
+                { label: "Matched Applicant Details", apiKey: "data_consistency_check", tooltip: matchTooltip },
                 { label: "Grade Requirements Screening", apiKey: "grade_requirements_screening", tooltip: gradingTooltip }
             ]
         },
@@ -53,7 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
             checks: [
                 { label: "Blurred File Detection", apiKey: "filter_blurred" },
                 { label: "Cropped File Detection", apiKey: "filter_cropped" },
-                { label: "File Size Check", apiKey: "filter_file_size" },
+                // Added Detailed Match Check
+                { label: "Matched Applicant Details", apiKey: "data_consistency_check", tooltip: matchTooltip },
                 { label: "Program-Specific Screening", apiKey: "program_specific_screening", tooltip: stemTooltip },
                 { label: "Grade Requirements Screening", apiKey: "grade_requirements_screening", tooltip: gradingTooltip }
             ]
@@ -93,21 +95,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const parentStatusCell = document.getElementById(`status-cell-${docName}`);
-        if(!parentStatusCell) return;
-        
-        if (hasFail) {
-            parentStatusCell.innerHTML = createStatusSpan('Rejected', true);
-        } else if (hasPending) {
-            parentStatusCell.innerHTML = createStatusSpan('Pending', true);
-        } else {
-            parentStatusCell.innerHTML = createStatusSpan('Approved', true);
+        if(parentStatusCell) {
+            if (hasFail) {
+                parentStatusCell.innerHTML = createStatusSpan('Rejected', true);
+            } else if (hasPending) {
+                parentStatusCell.innerHTML = createStatusSpan('Pending', true);
+            } else {
+                parentStatusCell.innerHTML = createStatusSpan('Approved', true);
+            }
         }
     };
 
     // --- Main Fetch ---
     fetch(`api/get_evaluation_data.php?id=${applicationId}`)
-        .then(r => r.text().then(t => { try { return JSON.parse(t) } catch(e){ throw new Error("Server JSON Error: " + t.substring(0,50)) }}))
+        .then(r => r.json())
         .then(data => {
+            console.log("--------------------------------");
+            console.log("FULL API RESPONSE:", data);
+            console.log("AI RESULTS:", data.ai_results);
+            
+            if (data.ai_results && data.ai_results['JHS Form 137']) {
+                 console.log("JHS MATCH DETAILS:", data.ai_results['JHS Form 137'].match_details);
+            }
+            if (data.ai_results && data.ai_results['SHS Form 137']) {
+                 console.log("SHS MATCH DETAILS:", data.ai_results['SHS Form 137'].match_details);
+            }
+            console.log("--------------------------------");
+
             if (data.error) throw new Error(data.message);
             if (!data.details) throw new Error("Applicant not found");
 
@@ -139,28 +153,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         aiValue = data.ai_results[section.documentName][check.apiKey] || 'N/A';
                     }
 
-                    // --- Determine Dropdown Value ---
+                    // --- Auto-Select Human Dropdown ---
                     const uniqueKey = `${section.documentName}::${check.label}`;
                     let dropdownValue = 'Pending'; 
 
                     let savedValue = data.human_checklist[uniqueKey];
-
-                    // === FIX IS HERE ===
-                    // We only use the saved value if it exists AND it is NOT 'Pending'.
-                    // If it is 'Pending', we treat it as undecided and let the AI result take over.
                     if (savedValue && savedValue !== '' && savedValue !== 'Pending') {
                         dropdownValue = savedValue;
                     } else {
-                        // AUTO-SELECT based on AI Result
-                        const aiLower = String(aiValue).toLowerCase(); // Ensure it's a string
-                        
-                        if (aiLower === 'pass' || aiLower === 'good' || aiLower === 'clear') {
-                            dropdownValue = 'Pass';
-                        } else if (aiLower === 'fail' || aiLower === 'blurred' || aiLower === 'cropped') {
-                            dropdownValue = 'Fail';
-                        } else {
-                            dropdownValue = 'Pending';
-                        }
+                        const aiLower = String(aiValue).toLowerCase();
+                        if (aiLower === 'pass' || aiLower === 'good' || aiLower === 'clear') dropdownValue = 'Pass';
+                        else if (aiLower === 'fail' || aiLower === 'blurred' || aiLower === 'cropped') dropdownValue = 'Fail';
                     }
 
                     checkRow.innerHTML = `
