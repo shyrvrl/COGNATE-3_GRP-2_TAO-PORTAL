@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Configuration ---
     const gradingTooltip = "For Engineering and Programs with Board Examination - Must have a final grade of 80% or above in Math, Science, and English subjects.<br><br>For Education - No grade below 85%";
     const stemTooltip = "Engineering programs require a STEM Track";
-    const matchTooltip = "AI Check: Verified Name, Birthdate, Sex, School, and specific subject Grades match the application details.";
+    const matchTooltipSHS = "AI Check: Verified Name, Birthdate, Sex, School, and specific subject Grades match the application details.";
+    const matchTooltipJHS = "AI Check: Verified Name, Completion Year, and Grade 10 Math/Science/English grades match the application details.";
 
     const structureConfig = [
         {
@@ -28,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 { label: "Cropped File Detection", apiKey: "filter_cropped" },
             ]
         },
-        // REMOVED GRADES FORM 1 MATCH CHECK (As requested)
         {
             documentName: "Grades Form 1",
             checks: [
@@ -44,8 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             checks: [
                 { label: "Blurred File Detection", apiKey: "filter_blurred" },
                 { label: "Cropped File Detection", apiKey: "filter_cropped" },
-                // Added Detailed Match Check
-                { label: "Matched Applicant Details", apiKey: "data_consistency_check", tooltip: matchTooltip },
+                { label: "Matched Applicant Details", apiKey: "data_consistency_check", tooltip: matchTooltipJHS },
                 { label: "Grade Requirements Screening", apiKey: "grade_requirements_screening", tooltip: gradingTooltip }
             ]
         },
@@ -54,8 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             checks: [
                 { label: "Blurred File Detection", apiKey: "filter_blurred" },
                 { label: "Cropped File Detection", apiKey: "filter_cropped" },
-                // Added Detailed Match Check
-                { label: "Matched Applicant Details", apiKey: "data_consistency_check", tooltip: matchTooltip },
+                { label: "Matched Applicant Details", apiKey: "data_consistency_check", tooltip: matchTooltipSHS },
                 { label: "Program-Specific Screening", apiKey: "program_specific_screening", tooltip: stemTooltip },
                 { label: "Grade Requirements Screening", apiKey: "grade_requirements_screening", tooltip: gradingTooltip }
             ]

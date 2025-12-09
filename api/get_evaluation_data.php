@@ -1,7 +1,4 @@
 <?php
-// api/get_evaluation_data.php
-
-// Error Handling Setup
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 header('Content-Type: application/json');
@@ -24,8 +21,7 @@ try {
         'human_checklist' => []
     ];
 
-    // 1. Get Applicant Details (CORRECTED COLUMN NAMES)
-    // We select specific columns to ensure we have the data for AI matching
+    // 1. Get Applicant Details
     $query = "SELECT student_name, application_no, choice1_program, 
                      birthdate, sex, 
                      jhs_math_grade, jhs_science_grade, jhs_english_grade, jhs_completion_year,
@@ -42,18 +38,14 @@ try {
 
     if (!$response['details']) throw new Exception("Applicant not found");
 
-    // -------------------------------------------------------------------------
     // 1.5. AUTOMATIC AI CHECK
-    // -------------------------------------------------------------------------
     $docQuery = $conn->prepare("SELECT id, file_path, document_type FROM documents WHERE application_id = ?");
     $docQuery->bind_param("i", $application_id);
     $docQuery->execute();
     $documents = $docQuery->get_result();
 
     while ($doc = $documents->fetch_assoc()) {
-        // Only run for JHS Form 137 or SHS Form 137
         if (stripos($doc['document_type'], 'Form 137') !== false) {
-            
             $checkStmt = $conn->prepare("SELECT id, data_consistency_check FROM ai_document_analysis WHERE application_id = ? AND document_type = ?");
             $checkStmt->bind_param("is", $application_id, $doc['document_type']);
             $checkStmt->execute();
@@ -67,10 +59,9 @@ try {
         }
     }
     $docQuery->close();
-    // -------------------------------------------------------------------------
 
     // 2. Get AI Analysis Results
-    $query = "SELECT document_type, filter_blurred, filter_cropped, 
+    $query = "SELECT document_type, filter_blurred, filter_cropped,
                      program_specific_screening, grade_requirements_screening, check_autofill_completeness,
                      data_consistency_check, match_details 
               FROM ai_document_analysis 
@@ -83,7 +74,6 @@ try {
     
     while ($row = $result->fetch_assoc()) {
         $docType = $row['document_type'];
-        // Decode the match details for frontend use if needed
         if(isset($row['match_details'])) {
             $row['match_details'] = json_decode($row['match_details'], true);
         }
@@ -91,8 +81,7 @@ try {
     }
     $stmt->close();
 
-    // 3. Get Human Checklist (CORRECTED COLUMN NAMES)
-    // Using 'document_title' as the key and 'evaluation_status' as value
+    // 3. Get Human Checklist
     $stmt = $conn->prepare("SELECT document_title, evaluation_status FROM human_evaluation_checklist WHERE application_id = ?");
     $stmt->bind_param("i", $application_id);
     $stmt->execute();
@@ -112,151 +101,257 @@ try {
 }
 if (isset($conn)) $conn->close();
 
-
-// =============================================================================
-// HELPER: INTERNAL AI ANALYSIS (UPDATED FOR SPECIFIC LOGIC)
-// =============================================================================
 function run_ai_analysis_internal($conn, $app_id, $doc, $applicant) {
-    $NANONETS_API_KEY = "5078eb1d-b0db-11f0-890d-e6e0013317b1"; 
+    
+    // 1. CONFIGURATION
+    $NANONETS_API_KEY = "0a5fdcd8-d44f-11f0-8582-ba97bbc8169d"; 
     $MODELS = [
-        'JHS' => "4b96dc43-641d-4c60-99cd-c73e89e5f765", 
-        'SHS' => "be5fec5f-0dec-43ad-8ba3-2344ce3a78bf"
+        'JHS'   => "6aaa2e00-a46d-43b6-80a4-1501f0a21066", 
+        'SHS'   => "a37018ed-3f0b-475a-a860-3f33607652e7", 
+        'FORM1' => "77480625-8c5e-4381-a880-bbcbde38ef93"  
     ];
 
+    // 2. MODEL SELECTION
     $is_jhs = stripos($doc['document_type'], 'JHS') !== false;
     $model_id = $is_jhs ? $MODELS['JHS'] : $MODELS['SHS'];
+    if (stripos($doc['document_type'], 'Form 1') !== false) $model_id = $MODELS['FORM1'];
 
-    // File Path Logic
+    // 3. FILE PATH
     $base_dir = dirname(__DIR__); 
     $file_path_absolute = $base_dir . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $doc['file_path']);
     if (!file_exists($file_path_absolute)) return;
 
-    // Nanonets Call
+    // 4. API CALL
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "https://app.nanonets.com/api/v2/OCR/Model/$model_id/LabelFile/");
+    curl_setopt($ch, CURLOPT_URL, "https://app.nanonets.com/api/v2/OCR/Model/$model_id/LabelFile/?async=false");
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_USERPWD, "$NANONETS_API_KEY:");
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, ['file' => new CURLFile($file_path_absolute)]);
     $result = curl_exec($ch);
     curl_close($ch);
+    
     $ocr_data = json_decode($result, true);
 
-    // Helper to normalize strings
-    $norm = function($str) { return strtolower(trim(preg_replace('/[^a-zA-Z0-9]/', '', $str))); };
+    // 5. PARSE DATA (UPDATED: Iterate through ALL results, not just index 0)
+    $all_data = [];
+    $extracted_flat = []; 
+    $full_text = ""; 
+    $page2_text = ""; 
+    
+    if (isset($ocr_data['result'])) {
+        // Iterate through all result objects (some APIs separate pages or models)
+        foreach ($ocr_data['result'] as $res_obj) {
+            
+            if (isset($res_obj['prediction'])) {
+                foreach ($res_obj['prediction'] as $p) {
+                    
+                    // Identify Page Number (0-based)
+                    $page_idx = isset($p['page_no']) ? $p['page_no'] : -1;
+                    
+                    // --- HANDLE FIELDS ---
+                    if (isset($p['ocr_text'])) {
+                        $txt = " " . $p['ocr_text'];
+                        $full_text .= $txt;
+                        if ($page_idx == 1) $page2_text .= $txt; // Page 2 is index 1
+
+                        if (isset($p['label'])) {
+                            $label = strtoupper($p['label']);
+                            $extracted_flat[$label] = $p['ocr_text'];
+                            $all_data[$label][] = $p['ocr_text'];
+                        }
+                    }
+
+                    // --- HANDLE TABLES ---
+                    if ($p['type'] === 'table' && isset($p['cells'])) {
+                        foreach ($p['cells'] as $cell) {
+                            if (!empty($cell['text'])) {
+                                $full_text .= " " . $cell['text'];
+                                
+                                // Table cells sometimes inherit page_no or have their own
+                                $cell_page = isset($cell['page']) ? $cell['page'] : $page_idx;
+                                if ($cell_page == 1) {
+                                    $page2_text .= " " . $cell['text'];
+                                }
+
+                                if(!empty($cell['label'])) {
+                                    $label = strtoupper($cell['label']);
+                                    $all_data[$label][] = $cell['text'];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // 6. VERIFICATION LOGIC
     $match_details = [];
     $overall_pass = true;
-
-    // Helper Check Function
+    
+    $norm = function($str) { return strtolower(trim(preg_replace('/[^a-zA-Z0-9]/', '', $str))); };
+    
     $check = function($label, $db_val, $ocr_val, $is_fuzzy=false) use (&$match_details, &$overall_pass, $norm) {
         $pass = false;
-        if (empty($db_val)) {
-            // If DB value is empty, we can't verify, usually skip or mark N/A. Here we skip failing it.
-             $match_details[$label] = "N/A (No Data)";
-             return true;
-        }
-
+        if (empty($db_val)) { $match_details[$label] = "N/A (No Data)"; return true; }
+        $clean_db = $norm($db_val);
+        $clean_ocr = $norm($ocr_val);
         if ($is_fuzzy) {
-            similar_text($norm($db_val), $norm($ocr_val), $score);
-            if ($score > 80) $pass = true;
+            similar_text($clean_db, $clean_ocr, $score);
+            if ($score > 75) $pass = true;
         } else {
-            // Strict-ish check (dates, grades)
-            if ($norm($db_val) == $norm($ocr_val)) $pass = true;
-            // Handle Grades (85.00 vs 85)
+            if ($clean_db == $clean_ocr) $pass = true;
             if (is_numeric($db_val) && is_numeric($ocr_val)) {
                 if (abs(floatval($db_val) - floatval($ocr_val)) < 0.1) $pass = true;
             }
         }
-        
-        $match_details[$label] = $pass ? "Pass" : "Fail (DB: $db_val vs Doc: $ocr_val)";
+        $val_disp = empty($ocr_val) ? 'Missing' : $ocr_val;
+        $match_details[$label] = $pass ? "Pass" : "Fail (DB: $db_val vs Doc: $val_disp)";
         if (!$pass) $overall_pass = false;
         return $pass;
     };
 
-    // Extract common fields
-    $extracted = [];
-    if (isset($ocr_data['result'][0]['prediction'])) {
-        foreach ($ocr_data['result'][0]['prediction'] as $f) {
-            $extracted[$f['label']] = $f['ocr_text'];
-        }
-    }
-    // Full text for subject searching
-    $full_text = isset($ocr_data['result'][0]['ocr_text']) ? $ocr_data['result'][0]['ocr_text'] : '';
-
     // --- JHS LOGIC ---
     if ($is_jhs) {
-        // 1. Name (Fuzzy)
+        // 1. Name Check
         $db_name = $applicant['student_name']; 
-        // Swap surname if comma exists
-        if (strpos($db_name, ',') !== false) {
-             $p = explode(',', $db_name);
-             if(count($p)>=2) $db_name = trim($p[1]) . " " . trim($p[0]);
+        $db_name_clean = $norm($db_name);
+        if (strpos($db_name, ',') !== false) { 
+            $p = explode(',', $db_name); 
+            if(count($p)>=2) $db_name_clean = $norm(trim($p[1]) . " " . trim($p[0])); 
         }
-        similar_text($norm($db_name), $norm($extracted['FULL_NAME'] ?? ''), $n_score);
-        if($n_score < 70) { $match_details['name'] = "Fail ($db_name vs " . ($extracted['FULL_NAME']??'Missing') . ")"; $overall_pass = false; } else { $match_details['name'] = 'Pass'; }
+        
+        $ocr_name = $extracted_flat['FULL_NAME'] ?? '';
+        similar_text($db_name_clean, $norm($ocr_name), $n_score);
+        
+        if($n_score < 70) { 
+            $match_details['name'] = "Fail (DB: $db_name vs Doc: " . ($ocr_name ?: 'Missing') . ")"; 
+            $overall_pass = false; 
+        } else { 
+            $match_details['name'] = 'Pass'; 
+        }
 
-        // 2. Birthdate & Sex
-        $check('birthdate', $applicant['birthdate'], $extracted['BIRTHDATE'] ?? '');
-        $check('sex', $applicant['sex'], $extracted['SEX'] ?? '');
+        // 2. Completion Year
+        $db_year = trim($applicant['jhs_completion_year']);
+        $ocr_year_jhs = $extracted_flat['JHS_COMPLETION_YEAR'] ?? '';
+        $ocr_year_shs = $extracted_flat['SHS_COMPLETION_YEAR'] ?? '';
+        
+        $year_pass = false;
+        $found_year = $ocr_year_jhs ?: $ocr_year_shs;
+        
+        if (!empty($db_year)) {
+            if (strpos($ocr_year_jhs, $db_year) !== false) { $year_pass = true; $found_year = $ocr_year_jhs; }
+            elseif (strpos($ocr_year_shs, $db_year) !== false) { $year_pass = true; $found_year = $ocr_year_shs; }
+            elseif (!empty($full_text) && strpos($full_text, $db_year) !== false) { $year_pass = true; $found_year = "Found in Doc"; }
+        }
 
-        // 3. JHS Grades (Math, Sci, Eng)
-        $check('math_grade', $applicant['jhs_math_grade'], $extracted['MATH_GRADE'] ?? '');
-        $check('science_grade', $applicant['jhs_science_grade'], $extracted['SCI_GRADE'] ?? '');
-        $check('english_grade', $applicant['jhs_english_grade'], $extracted['ENG_GRADE'] ?? '');
+        if ($year_pass) {
+             $match_details['completion_year'] = "Pass";
+        } else {
+             $match_details['completion_year'] = "Fail (DB: $db_year vs Doc: $found_year)";
+             $overall_pass = false;
+        }
 
-        // 4. Completion Year
-        $check('completion_year', $applicant['jhs_completion_year'], $extracted['COMPLETION_YEAR'] ?? '');
+        // 3. Grades (Tolerance 1.1 + Robust Fallback)
+        $check_jhs_fallback = function($label_key, $db_val, $ocr_key) use ($extracted_flat, $page2_text, &$match_details, &$overall_pass) {
+            if (empty($db_val)) { $match_details[$label_key] = "N/A"; return; }
+            
+            $ocr_val = $extracted_flat[$ocr_key] ?? '';
+            $pass = false;
+
+            // Step A: Check Label (Tolerance 1.1 allows 86 to match 87)
+            if (is_numeric($db_val) && is_numeric($ocr_val)) {
+                if (abs(floatval($db_val) - floatval($ocr_val)) < 1.1) $pass = true;
+            } elseif ($db_val == $ocr_val) {
+                $pass = true;
+            }
+
+            // Step B: Fallback (Search text on Page 2)
+            if (!$pass) {
+                $search_val = intval($db_val); 
+                if (!empty($page2_text) && preg_match("/\b" . $search_val . "\b/", $page2_text)) {
+                    $pass = true;
+                    $match_details[$label_key] = "Pass (Found in Page 2)";
+                }
+            } else {
+                if($pass) $match_details[$label_key] = "Pass";
+            }
+
+            if (!$pass) {
+                $match_details[$label_key] = "Fail (DB: $db_val vs Doc: " . ($ocr_val ?: 'Missing') . ")";
+                $overall_pass = false;
+            }
+        };
+
+        $check_jhs_fallback('math_grade', $applicant['jhs_math_grade'], '10_MATH');
+        $check_jhs_fallback('science_grade', $applicant['jhs_science_grade'], '10_SCI');
+        $check_jhs_fallback('english_grade', $applicant['jhs_english_grade'], '10_ENG');
     } 
     // --- SHS LOGIC ---
     else {
-        // 1. Name, Bday, Sex
+        // ... (Keep existing SHS logic) ...
         $db_name = $applicant['student_name']; 
-        if (strpos($db_name, ',') !== false) {
-             $p = explode(',', $db_name);
-             if(count($p)>=2) $db_name = trim($p[1]) . " " . trim($p[0]);
-        }
-        similar_text($norm($db_name), $norm($extracted['FULL_NAME'] ?? ''), $n_score);
-        if($n_score < 70) { $match_details['name'] = "Fail ($db_name vs " . ($extracted['FULL_NAME']??'Missing') . ")"; $overall_pass = false; } else { $match_details['name'] = 'Pass'; }
+        if (strpos($db_name, ',') !== false) { $p = explode(',', $db_name); if(count($p)>=2) $db_name = trim($p[1]) . " " . trim($p[0]); }
+        similar_text($norm($db_name), $norm($extracted_flat['FULL_NAME'] ?? ''), $n_score);
+        if($n_score < 70) { $match_details['name'] = "Fail ($db_name vs " . ($extracted_flat['FULL_NAME']??'Missing') . ")"; $overall_pass = false; } else { $match_details['name'] = 'Pass'; }
         
-        $check('birthdate', $applicant['birthdate'], $extracted['BIRTHDATE'] ?? '');
-        $check('sex', $applicant['sex'], $extracted['SEX'] ?? '');
+        similar_text($norm($applicant['shs_track'] . ' ' . $applicant['shs_strand']), $norm($extracted_flat['TRACK_STRAND'] ?? ''), $t_score);
+        if($t_score < 50) { $match_details['track_strand'] = "Fail (DB: {$applicant['shs_track']} {$applicant['shs_strand']} vs Doc: " . ($extracted_flat['TRACK_STRAND']??'Missing') . ")"; $overall_pass = false; } else { $match_details['track_strand'] = 'Pass'; }
 
-        // 2. Track & Strand & School (Fuzzy)
-        similar_text($norm($applicant['shs_track'] . ' ' . $applicant['shs_strand']), $norm($extracted['TRACK_STRAND'] ?? ''), $t_score);
-        // Lower threshold for track/strand as OCR often captures extra words
-        if($t_score < 50) { $match_details['track_strand'] = "Fail (DB: {$applicant['shs_track']} {$applicant['shs_strand']})"; $overall_pass = false; } else { $match_details['track_strand'] = 'Pass'; }
+        similar_text($norm($applicant['shs_school_name']), $norm($extracted_flat['SCHOOL_NAME'] ?? ''), $s_score);
+        if($s_score < 70) { $match_details['school_name'] = "Fail (DB: {$applicant['shs_school_name']} vs Doc: " . ($extracted_flat['SCHOOL_NAME']??'Missing') . ")"; $overall_pass = false; } else { $match_details['school_name'] = 'Pass'; }
 
-        similar_text($norm($applicant['shs_school_name']), $norm($extracted['SCHOOL_NAME'] ?? ''), $s_score);
-        if($s_score < 70) { $match_details['school_name'] = "Fail (DB: {$applicant['shs_school_name']})"; $overall_pass = false; } else { $match_details['school_name'] = 'Pass'; }
-
-        // 3. ALL SUBJECTS (Sem 1 & Sem 2)
-        // We look for the grade in the text.
-        $subjects_to_check = [
-            'Sem1_Math' => $applicant['shs_sem1_math_grade'],
-            'Sem1_Sci' => $applicant['shs_sem1_science_grade'],
-            'Sem1_Eng' => $applicant['shs_sem1_english_grade'],
-            'Sem2_Math' => $applicant['shs_sem2_math_grade'],
-            'Sem2_Sci' => $applicant['shs_sem2_science_grade'],
-            'Sem2_Eng' => $applicant['shs_sem2_english_grade']
-        ];
-
-        foreach($subjects_to_check as $subj => $grade) {
-            if(empty($grade)) continue;
-            // Check if the grade exists in the OCR text
-            if (strpos($full_text, (string)$grade) === false) {
-                $match_details[$subj] = "Fail (Grade $grade not found)";
-                $overall_pass = false;
-            } else {
-                $match_details[$subj] = "Pass";
+        $check_subject_mapped = function($db_label, $db_grade, $keywords) use ($all_data, $full_text, &$match_details, &$overall_pass) {
+            if (empty($db_grade)) return;
+            $candidates = [];
+            foreach ($all_data as $label_key => $values) {
+                foreach ($keywords as $kw) {
+                    if (strpos($label_key, $kw) !== false) {
+                        foreach($values as $v) {
+                            $clean_v = preg_replace('/[^0-9.]/', '', $v);
+                            if (is_numeric($clean_v)) $candidates[] = $clean_v;
+                        }
+                    }
+                }
             }
-        }
+            $pass = false;
+            foreach ($candidates as $ocr_grade) {
+                if (abs(floatval($db_grade) - floatval($ocr_grade)) < 1.0) { $pass = true; break; }
+            }
+            if (!$pass) {
+                $g_int = intval($db_grade);
+                if (preg_match("/\b" . $g_int . "\b/", $full_text)) {
+                    $pass = true;
+                    $match_details[$db_label] = "Pass (Found in text)";
+                }
+            } else {
+                $match_details[$db_label] = "Pass";
+            }
+            if (!$pass) {
+                $found_str = !empty($candidates) ? implode(", ", array_unique($candidates)) : "None";
+                $match_details[$db_label] = "Fail (DB: $db_grade vs Found: $found_str)";
+                $overall_pass = false;
+            }
+        };
+
+        $math_keys = ['MATH', 'CALCULUS', 'STAT', 'ALGEBRA', 'GENMATH', 'STATPROB', 'BASICCAL', 'PRECAL', 'BUSSMATH'];
+        $sci_keys = ['SCIENCE', 'BIO', 'CHEM', 'PHYSICS', 'EARTH', 'DRRR', 'GENBIO', 'GEN_BIO', 'GENCHEM', 'GENPHYS', 'PHYSCI', 'EARTHSCI'];
+        $eng_keys = ['ENGLISH', 'ORAL', 'READ', 'WRITE', 'LIT', 'COM', 'ORALCOM', 'READ_WRITE', 'ENGAP'];
+
+        $check_subject_mapped('Math', $applicant['shs_sem1_math_grade'], $math_keys);
+        $check_subject_mapped('Science', $applicant['shs_sem1_science_grade'], $sci_keys);
+        $check_subject_mapped('English', $applicant['shs_sem1_english_grade'], $eng_keys);
+        if (!empty($applicant['shs_sem2_math_grade'])) $check_subject_mapped('Math_Sem2', $applicant['shs_sem2_math_grade'], $math_keys);
+        if (!empty($applicant['shs_sem2_science_grade'])) $check_subject_mapped('Science_Sem2', $applicant['shs_sem2_science_grade'], $sci_keys);
+        if (!empty($applicant['shs_sem2_english_grade'])) $check_subject_mapped('English_Sem2', $applicant['shs_sem2_english_grade'], $eng_keys);
     }
 
+    // 7. SAVE TO DB
     $final_status = $overall_pass ? 'Pass' : 'Fail';
     $json_details = json_encode($match_details);
     $json_dump = json_encode($ocr_data);
 
-    // DB Update
     $checkQ = $conn->prepare("SELECT id FROM ai_document_analysis WHERE application_id = ? AND document_type = ?");
     $checkQ->bind_param("is", $app_id, $doc['document_type']);
     $checkQ->execute();
@@ -269,9 +364,9 @@ function run_ai_analysis_internal($conn, $app_id, $doc, $applicant) {
         $upd->execute();
         $upd->close();
     } else {
-        // Fallback INSERT if not exists (though usually it exists from upload)
-        $ins = $conn->prepare("INSERT INTO ai_document_analysis (application_id, document_id, document_type, match_details, raw_ocr_data, data_consistency_check, ocr_status) VALUES (?, ?, ?, ?, ?, ?, 'completed')");
-        $ins->bind_param("iissss", $app_id, $doc['id'], $doc['document_type'], $json_details, $json_dump, $final_status);
+        $dummy = ''; $zero = 0;
+        $ins = $conn->prepare("INSERT INTO ai_document_analysis (application_id, document_id, document_type, match_details, raw_ocr_data, data_consistency_check, ocr_status, extracted_name, extracted_school, name_match_score, school_match_score) VALUES (?, ?, ?, ?, ?, ?, 'completed', ?, ?, ?, ?)");
+        $ins->bind_param("iissssssdd", $app_id, $doc['id'], $doc['document_type'], $json_details, $json_dump, $final_status, $dummy, $dummy, $zero, $zero);
         $ins->execute();
         $ins->close();
     }
