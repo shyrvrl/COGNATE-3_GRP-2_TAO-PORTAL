@@ -22,12 +22,16 @@ try {
     ];
 
     // 1. Get Applicant Details
-    $query = "SELECT student_name, application_no, choice1_program, 
+    $query = "SELECT CONCAT(last_name, ', ', first_name, 
+               CASE WHEN middle_name IS NOT NULL AND middle_name != '' THEN CONCAT(' ', middle_name) ELSE '' END,
+               CASE WHEN name_extension IS NOT NULL AND name_extension != '' THEN CONCAT(' ', name_extension) ELSE '' END) AS student_name, 
+                     application_no, choice1_program, 
                      birthdate, sex, 
                      jhs_math_grade, jhs_science_grade, jhs_english_grade, jhs_completion_year,
                      shs_school_name, shs_track, shs_strand,
                      shs_sem1_math_grade, shs_sem1_science_grade, shs_sem1_english_grade,
-                     shs_sem2_math_grade, shs_sem2_science_grade, shs_sem2_english_grade
+                     shs_sem2_math_grade, shs_sem2_science_grade, shs_sem2_english_grade,
+                     first_name, middle_name, last_name, name_extension
               FROM applications WHERE id = ?";
               
     $stmt = $conn->prepare($query);
@@ -46,13 +50,13 @@ try {
 
     while ($doc = $documents->fetch_assoc()) {
         if (stripos($doc['document_type'], 'Form 137') !== false) {
-            $checkStmt = $conn->prepare("SELECT id, data_consistency_check FROM ai_document_analysis WHERE application_id = ? AND document_type = ?");
+            $checkStmt = $conn->prepare("SELECT id, ocr_status FROM ai_document_analysis WHERE application_id = ? AND document_type = ?");
             $checkStmt->bind_param("is", $application_id, $doc['document_type']);
             $checkStmt->execute();
             $analysis = $checkStmt->get_result()->fetch_assoc();
             
-            // Run AI if not yet run or pending
-            if (!$analysis || $analysis['data_consistency_check'] === 'Pending' || $analysis['data_consistency_check'] === NULL) {
+            // Run AI if not yet run or if status is pending/failed
+            if (!$analysis || $analysis['ocr_status'] === 'pending' || $analysis['ocr_status'] === 'failed' || $analysis['ocr_status'] === NULL) {
                 run_ai_analysis_internal($conn, $application_id, $doc, $response['details']);
             }
             $checkStmt->close();
@@ -63,7 +67,8 @@ try {
     // 2. Get AI Analysis Results
     $query = "SELECT document_type, filter_blurred, filter_cropped,
                      program_specific_screening, grade_requirements_screening, check_autofill_completeness,
-                     data_consistency_check, match_details 
+                     extracted_name, extracted_school, name_match_score, school_match_score,
+                     raw_ocr_data, ocr_status, data_consistency_check, match_details
               FROM ai_document_analysis 
               WHERE application_id = ?";
               
@@ -77,9 +82,62 @@ try {
         if(isset($row['match_details'])) {
             $row['match_details'] = json_decode($row['match_details'], true);
         }
+        
+        // Force all AI results to "Pass" for Certificate of Enrollment and Grades Form 1
+        if ($docType === 'Certificate of Enrollment' || $docType === 'Grades Form 1') {
+            $row['filter_blurred'] = 'Pass';
+            $row['filter_cropped'] = 'Pass';
+            $row['program_specific_screening'] = 'Pass';
+            $row['grade_requirements_screening'] = 'Pass';
+            $row['check_autofill_completeness'] = 'Pass';
+        }
+        
+        // Force blurred file detection to "Pass" for JHS Form 137 and SHS Form 137
+        if ($docType === 'JHS Form 137' || $docType === 'SHS Form 137') {
+            $row['filter_blurred'] = 'Pass';
+        }
+        
         $response['ai_results'][$docType] = $row;
     }
     $stmt->close();
+    
+    // Ensure "Pass" entries exist for Certificate of Enrollment and Grades Form 1 even if no AI analysis record exists
+    $requiredDocs = ['Certificate of Enrollment', 'Grades Form 1'];
+    foreach ($requiredDocs as $docType) {
+        if (!isset($response['ai_results'][$docType])) {
+            $response['ai_results'][$docType] = [
+                'document_type' => $docType,
+                'filter_blurred' => 'Pass',
+                'filter_cropped' => 'Pass',
+                'program_specific_screening' => 'Pass',
+                'grade_requirements_screening' => 'Pass',
+                'check_autofill_completeness' => 'Pass',
+                'extracted_name' => null,
+                'extracted_school' => null,
+                'name_match_score' => 0,
+                'school_match_score' => 0,
+                'raw_ocr_data' => null,
+                'ocr_status' => null,
+                'data_consistency_check' => null,
+                'match_details' => null
+            ];
+        } else {
+            // Double-check to ensure all fields are "Pass" (in case they were missing)
+            $response['ai_results'][$docType]['filter_blurred'] = 'Pass';
+            $response['ai_results'][$docType]['filter_cropped'] = 'Pass';
+            $response['ai_results'][$docType]['program_specific_screening'] = 'Pass';
+            $response['ai_results'][$docType]['grade_requirements_screening'] = 'Pass';
+            $response['ai_results'][$docType]['check_autofill_completeness'] = 'Pass';
+        }
+    }
+    
+    // Ensure blurred file detection is "Pass" for JHS Form 137 and SHS Form 137
+    $form137Docs = ['JHS Form 137', 'SHS Form 137'];
+    foreach ($form137Docs as $docType) {
+        if (isset($response['ai_results'][$docType])) {
+            $response['ai_results'][$docType]['filter_blurred'] = 'Pass';
+        }
+    }
 
     // 3. Get Human Checklist
     $stmt = $conn->prepare("SELECT document_title, evaluation_status FROM human_evaluation_checklist WHERE application_id = ?");
@@ -215,7 +273,14 @@ function run_ai_analysis_internal($conn, $app_id, $doc, $applicant) {
     // --- JHS LOGIC ---
     if ($is_jhs) {
         // 1. Name Check
-        $db_name = $applicant['student_name']; 
+        // Build name from separate fields
+        $db_name = trim($applicant['last_name'] . ', ' . $applicant['first_name']);
+        if (!empty($applicant['middle_name'])) {
+            $db_name .= ' ' . $applicant['middle_name'];
+        }
+        if (!empty($applicant['name_extension'])) {
+            $db_name .= ' ' . $applicant['name_extension'];
+        }
         $db_name_clean = $norm($db_name);
         if (strpos($db_name, ',') !== false) { 
             $p = explode(',', $db_name); 
@@ -290,8 +355,14 @@ function run_ai_analysis_internal($conn, $app_id, $doc, $applicant) {
     } 
     // --- SHS LOGIC ---
     else {
-        // ... (Keep existing SHS logic) ...
-        $db_name = $applicant['student_name']; 
+        // Build name from separate fields
+        $db_name = trim($applicant['last_name'] . ', ' . $applicant['first_name']);
+        if (!empty($applicant['middle_name'])) {
+            $db_name .= ' ' . $applicant['middle_name'];
+        }
+        if (!empty($applicant['name_extension'])) {
+            $db_name .= ' ' . $applicant['name_extension'];
+        }
         if (strpos($db_name, ',') !== false) { $p = explode(',', $db_name); if(count($p)>=2) $db_name = trim($p[1]) . " " . trim($p[0]); }
         similar_text($norm($db_name), $norm($extracted_flat['FULL_NAME'] ?? ''), $n_score);
         if($n_score < 70) { $match_details['name'] = "Fail ($db_name vs " . ($extracted_flat['FULL_NAME']??'Missing') . ")"; $overall_pass = false; } else { $match_details['name'] = 'Pass'; }
@@ -348,25 +419,102 @@ function run_ai_analysis_internal($conn, $app_id, $doc, $applicant) {
     }
 
     // 7. SAVE TO DB
+    // Set filter columns (#5-9) to "Pass" and save AI analysis results (#11-18)
     $final_status = $overall_pass ? 'Pass' : 'Fail';
     $json_details = json_encode($match_details);
     $json_dump = json_encode($ocr_data);
-
+    
+    // Extract name and school from OCR if available
+    $extracted_name = $extracted_flat['FULL_NAME'] ?? '';
+    $extracted_school = $extracted_flat['SCHOOL_NAME'] ?? '';
+    $name_score = 0;
+    $school_score = 0;
+    
+    // Calculate name match score if we have the name
+    if (!empty($extracted_name) && !empty($applicant['last_name'])) {
+        $norm = function($str) { return strtolower(trim(preg_replace('/[^a-zA-Z0-9]/', '', $str))); };
+        $db_name = trim($applicant['last_name'] . ', ' . $applicant['first_name']);
+        if (!empty($applicant['middle_name'])) {
+            $db_name .= ' ' . $applicant['middle_name'];
+        }
+        if (!empty($applicant['name_extension'])) {
+            $db_name .= ' ' . $applicant['name_extension'];
+        }
+        $db_name_clean = $db_name;
+        if (strpos($db_name, ',') !== false) {
+            $p = explode(',', $db_name);
+            if (count($p) >= 2) {
+                $db_name_clean = trim($p[1]) . " " . trim($p[0]);
+            }
+        }
+        similar_text($norm($db_name_clean), $norm($extracted_name), $name_score);
+    }
+    
     $checkQ = $conn->prepare("SELECT id FROM ai_document_analysis WHERE application_id = ? AND document_type = ?");
     $checkQ->bind_param("is", $app_id, $doc['document_type']);
     $checkQ->execute();
     $exists = $checkQ->get_result()->fetch_assoc();
     $checkQ->close();
 
+    $filter_pass = "Pass";
     if ($exists) {
-        $upd = $conn->prepare("UPDATE ai_document_analysis SET match_details=?, raw_ocr_data=?, data_consistency_check=?, ocr_status='completed' WHERE id=?");
-        $upd->bind_param("sssi", $json_details, $json_dump, $final_status, $exists['id']);
+        // Update existing record
+        $upd = $conn->prepare("UPDATE ai_document_analysis SET 
+            filter_blurred = ?, 
+            filter_cropped = ?, 
+            program_specific_screening = ?, 
+            grade_requirements_screening = ?, 
+            check_autofill_completeness = ?,
+            document_id = ?,
+            extracted_name = ?,
+            extracted_school = ?,
+            name_match_score = ?,
+            school_match_score = ?,
+            raw_ocr_data = ?,
+            ocr_status = ?,
+            data_consistency_check = ?,
+            match_details = ?
+            WHERE id = ?");
+        $ocr_status_completed = 'completed';
+        $upd->bind_param("sssssisddsssssi", 
+            $filter_pass, $filter_pass, $filter_pass, $filter_pass, $filter_pass,
+            $doc['id'],
+            $extracted_name,
+            $extracted_school,
+            $name_score,
+            $school_score,
+            $json_dump,
+            $ocr_status_completed,
+            $final_status,
+            $json_details,
+            $exists['id']
+        );
         $upd->execute();
         $upd->close();
     } else {
-        $dummy = ''; $zero = 0;
-        $ins = $conn->prepare("INSERT INTO ai_document_analysis (application_id, document_id, document_type, match_details, raw_ocr_data, data_consistency_check, ocr_status, extracted_name, extracted_school, name_match_score, school_match_score) VALUES (?, ?, ?, ?, ?, ?, 'completed', ?, ?, ?, ?)");
-        $ins->bind_param("iissssssdd", $app_id, $doc['id'], $doc['document_type'], $json_details, $json_dump, $final_status, $dummy, $dummy, $zero, $zero);
+        // Insert new record
+        $ins = $conn->prepare("INSERT INTO ai_document_analysis (
+            application_id, document_type, document_id,
+            filter_blurred, filter_cropped, program_specific_screening, 
+            grade_requirements_screening, check_autofill_completeness,
+            extracted_name, extracted_school, name_match_score, school_match_score,
+            raw_ocr_data, ocr_status, data_consistency_check, match_details
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $ocr_status_completed = 'completed';
+        $ins->bind_param("isiisssssddsssss", 
+            $app_id, 
+            $doc['document_type'],
+            $doc['id'],
+            $filter_pass, $filter_pass, $filter_pass, $filter_pass, $filter_pass,
+            $extracted_name,
+            $extracted_school,
+            $name_score,
+            $school_score,
+            $json_dump,
+            $ocr_status_completed,
+            $final_status,
+            $json_details
+        );
         $ins->execute();
         $ins->close();
     }

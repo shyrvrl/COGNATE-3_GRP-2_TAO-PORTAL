@@ -1,5 +1,10 @@
 <?php
-include 'db_connection.php'; 
+if (file_exists('../db_connect.php')) include '../db_connect.php';
+elseif (file_exists('db_connect.php')) include 'db_connect.php';
+else {
+    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
+    exit;
+} 
 
 header('Content-Type: application/json');
 
@@ -33,7 +38,7 @@ if (!$doc) {
 }
 
 // --- 3. FETCH APPLICANT DATA ---
-$stmtApp = $conn->prepare("SELECT student_name, shs_school_name FROM applications WHERE id = ?");
+$stmtApp = $conn->prepare("SELECT first_name, middle_name, last_name, name_extension, shs_school_name FROM applications WHERE id = ?");
 $stmtApp->bind_param("i", $app_id);
 $stmtApp->execute();
 $applicant = $stmtApp->get_result()->fetch_assoc();
@@ -101,8 +106,14 @@ if (isset($ocr_data['result'][0]['prediction'])) {
 }
 
 // **Name Swapping Logic**
-// DB: "Dela Cruz, Juan M." -> Cleaned: "Juan M. Dela Cruz"
-$db_name_raw = $applicant['student_name'];
+// Build name from separate fields: "Dela Cruz, Juan M." -> Cleaned: "Juan M. Dela Cruz"
+$db_name_raw = trim($applicant['last_name'] . ', ' . $applicant['first_name']);
+if (!empty($applicant['middle_name'])) {
+    $db_name_raw .= ' ' . $applicant['middle_name'];
+}
+if (!empty($applicant['name_extension'])) {
+    $db_name_raw .= ' ' . $applicant['name_extension'];
+}
 $db_name_clean = $db_name_raw;
 
 if (strpos($db_name_raw, ',') !== false) {
@@ -119,33 +130,70 @@ similar_text(normalize($db_name_clean), normalize($extracted_name), $name_score)
 similar_text(normalize($target_school_db), normalize($extracted_school), $school_score);
 
 // --- 8. UPDATE DATABASE ---
-// We update the existing row identified by application_id and document_type
-$updateQuery = "UPDATE ai_document_analysis 
-                SET extracted_name = ?, 
-                    extracted_school = ?, 
-                    name_match_score = ?, 
-                    school_match_score = ?, 
-                    raw_ocr_data = ?, 
-                    ocr_status = 'completed',
-                    document_id = ?
-                WHERE application_id = ? AND document_type = ?";
+// Set filter columns (#5-9) to "Pass" and save AI analysis results (#11-18)
+$checkQ = $conn->prepare("SELECT id FROM ai_document_analysis WHERE application_id = ? AND document_type = ?");
+$checkQ->bind_param("is", $app_id, $doc['document_type']);
+$checkQ->execute();
+$exists = $checkQ->get_result()->fetch_assoc();
+$checkQ->close();
 
-$stmtUpd = $conn->prepare($updateQuery);
+$filter_pass = "Pass";
 $json_dump = json_encode($ocr_data);
-$doc_type_str = $doc['document_type'];
+$ocr_status_val = 'completed';
 
-$stmtUpd->bind_param("ssddsiis", 
-    $extracted_name, 
-    $extracted_school, 
-    $name_score, 
-    $school_score, 
-    $json_dump, 
-    $doc_id, 
-    $app_id, 
-    $doc_type_str
-);
-
-$stmtUpd->execute();
+if ($exists) {
+    // Update existing record
+    $upd = $conn->prepare("UPDATE ai_document_analysis SET 
+        filter_blurred = ?, 
+        filter_cropped = ?, 
+        program_specific_screening = ?, 
+        grade_requirements_screening = ?, 
+        check_autofill_completeness = ?,
+        document_id = ?,
+        extracted_name = ?,
+        extracted_school = ?,
+        name_match_score = ?,
+        school_match_score = ?,
+        raw_ocr_data = ?,
+        ocr_status = ?
+        WHERE id = ?");
+    $upd->bind_param("sssssisddssi", 
+        $filter_pass, $filter_pass, $filter_pass, $filter_pass, $filter_pass,
+        $doc_id,
+        $extracted_name,
+        $extracted_school,
+        $name_score,
+        $school_score,
+        $json_dump,
+        $ocr_status_val,
+        $exists['id']
+    );
+    $upd->execute();
+    $upd->close();
+} else {
+    // Insert new record
+    $ins = $conn->prepare("INSERT INTO ai_document_analysis (
+        application_id, document_type, document_id,
+        filter_blurred, filter_cropped, program_specific_screening, 
+        grade_requirements_screening, check_autofill_completeness,
+        extracted_name, extracted_school, name_match_score, school_match_score,
+        raw_ocr_data, ocr_status
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $ins->bind_param("isiisssssddss", 
+        $app_id, 
+        $doc['document_type'],
+        $doc_id,
+        $filter_pass, $filter_pass, $filter_pass, $filter_pass, $filter_pass,
+        $extracted_name,
+        $extracted_school,
+        $name_score,
+        $school_score,
+        $json_dump,
+        $ocr_status_val
+    );
+    $ins->execute();
+    $ins->close();
+}
 
 echo json_encode([
     'success' => true,

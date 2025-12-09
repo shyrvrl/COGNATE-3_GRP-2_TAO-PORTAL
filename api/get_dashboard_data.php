@@ -86,7 +86,10 @@ try {
     }
 
     // 6. Fetch Tasks
-    $tasks_sql = "SELECT student_name, application_status FROM applications WHERE application_status = 'For Evaluation' ORDER BY id ASC LIMIT 3";
+    $tasks_sql = "SELECT CONCAT(last_name, ', ', first_name, 
+               CASE WHEN middle_name IS NOT NULL AND middle_name != '' THEN CONCAT(' ', middle_name) ELSE '' END,
+               CASE WHEN name_extension IS NOT NULL AND name_extension != '' THEN CONCAT(' ', name_extension) ELSE '' END) AS student_name, 
+               application_status FROM applications WHERE application_status = 'For Evaluation' ORDER BY id ASC LIMIT 3";
     $result = $conn->query($tasks_sql);
     if ($result) {
         while($row = $result->fetch_assoc()) {

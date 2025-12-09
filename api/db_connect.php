@@ -9,7 +9,7 @@ header("Access-Control-Allow-Origin: *"); // Allow requests from any origin (for
 $servername = "localhost";
 $username = "root";
 $password = ""; // Default XAMPP password is empty
-$dbname = "university_admission2";
+$dbname = "stud_admission";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

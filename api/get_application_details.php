@@ -36,7 +36,10 @@ try {
 
     // 4. Fetch MAIN Application Details
     // REVISION: Restored "SELECT *" to ensure ALL columns (address, email, etc.) are fetched.
-    $stmt = $conn->prepare("SELECT * FROM applications WHERE id = ?");
+    // Also add computed student_name field for frontend compatibility
+    $stmt = $conn->prepare("SELECT *, CONCAT(last_name, ', ', first_name, 
+               CASE WHEN middle_name IS NOT NULL AND middle_name != '' THEN CONCAT(' ', middle_name) ELSE '' END,
+               CASE WHEN name_extension IS NOT NULL AND name_extension != '' THEN CONCAT(' ', name_extension) ELSE '' END) AS student_name FROM applications WHERE id = ?");
     if (!$stmt) {
         throw new Exception("Database prepare error: " . $conn->error);
     }

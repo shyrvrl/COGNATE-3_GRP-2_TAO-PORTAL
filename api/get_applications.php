@@ -63,10 +63,14 @@ if ($status_result) {
 // --- Part 2: Main Query ---
 $main_query = "
     SELECT 
-        app.id, app.application_no, app.student_name, app.choice1_program, 
+        app.id, app.application_no, 
+        CONCAT(app.last_name, ', ', app.first_name, 
+               CASE WHEN app.middle_name IS NOT NULL AND app.middle_name != '' THEN CONCAT(' ', app.middle_name) ELSE '' END,
+               CASE WHEN app.name_extension IS NOT NULL AND app.name_extension != '' THEN CONCAT(' ', app.name_extension) ELSE '' END) AS student_name,
+        app.choice1_program, 
         app.submission_timestamp, app.application_status, 
         app.evaluator_id,
-        app.last_updated, 
+        app.submission_timestamp AS last_updated, 
         sa.full_name AS evaluator_name 
     FROM applications AS app
     LEFT JOIN staff_accounts AS sa ON app.evaluator_id = sa.id
@@ -108,9 +112,9 @@ if (!empty($_GET['date_end'])) {
     $params[] = $_GET['date_end'];
     $types .= 's';
 }
-// ORDER BY app.last_updated ASC
+// ORDER BY app.submission_timestamp ASC
 // This puts the oldest updates at the top, and the NEWEST updates at the BOTTOM.
-$main_query .= " ORDER BY app.last_updated ASC, app.id ASC";
+$main_query .= " ORDER BY app.submission_timestamp ASC, app.id ASC";
 
 // Execute
 $stmt = $conn->prepare($main_query);
